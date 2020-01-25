@@ -1,0 +1,112 @@
+;;; prf-shell.el --- Better shell-mode API.
+
+;; Copyright (C) 2019-2020 Jordan Besly
+;;
+;; Version: 0.1.0
+;; Keywords: tramp, shell
+;; URL: https://github.com/p3r7/prf-tramp
+;; Package-Requires: ((with-shell-interpreter "0.1.0"))
+;;
+;; Permission is hereby granted to use and distribute this code, with or
+;; without modifications, provided that this copyright notice is copied with
+;; it. Like anything else that's free, lusty-explorer.el is provided *as is*
+;; and comes with no warranty of any kind, either expressed or implied. In no
+;; event will the copyright holder be liable for any damages resulting from
+;; the use of this software.
+
+;;; Commentary:
+;;  -----------
+;;
+;; For detailed instructions, please look at the README.md
+
+;;; Code:
+
+
+
+;; REQUIRES
+
+(require 'tramp)
+(require 'tramp-sh)
+
+(require 'with-shell-interpreter)
+
+
+
+;; VARS
+
+(defvar prf/shell-spawn-in-same-win 't)
+
+(defvar prf/shell-default-buffer-name "shell")
+(defvar prf/shell-buffer-local-name-construction-fn #'prf/shell--generate-buffer-name-local)
+(defvar prf/shell-buffer-remote-name-construction-fn #'prf/shell--generate-buffer-name-remote)
+
+
+
+;; INTERACTIVE SHELLS
+
+;; REVIEW: any use to pass command-switch?
+;; maybe when launchin a shell-command from a shell-mode buffer ?
+(cl-defun prf/shell (&key path
+                          interpreter interpreter-args command-switch
+                          w32-arg-quote)
+  "Create a shell at given PATH, using given INTERPRETER binary."
+  (interactive)
+
+  (with-shell-interpreter
+   :form
+   (let* ((is-remote (file-remote-p path))
+          (interpreter (with-shell-interpreter--normalize-path interpreter))
+          (shell-buffer-basename (prf/shell--generate-buffer-name is-remote interpreter path))
+          (shell-buffer-name (generate-new-buffer-name (concat "*" shell-buffer-basename "*")))
+          (current-prefix-arg '(4))
+          (comint-process-echoes t))
+     (when prf/shell-spawn-in-same-win
+       (prf/shell--maybe-register-buffer-display-same-win shell-buffer-basename))
+     (shell shell-buffer-name))
+   :path path
+   :interpreter interpreter
+   :interpreter-args interpreter-args
+   :command-switch command-switch
+   :w32-arg-quote w32-arg-quote))
+
+
+
+;; PRIVATE UTILS: BUFFER NAME
+
+(defun prf/shell--generate-buffer-name (is-remote interpreter path)
+  (let ((fn (if is-remote
+                prf/shell-buffer-remote-name-construction-fn
+              prf/shell-buffer-local-name-construction-fn)))
+    (funcall fn interpreter path)))
+
+(defun prf/shell--generate-buffer-name-local (&optional interpreter _path)
+  (if interpreter
+      (with-shell-interpreter--get-interpreter-name interpreter)
+    prf/shell-default-buffer-name))
+
+(defun prf/shell--generate-buffer-name-remote (intepreter path)
+  (let ((vec (tramp-dissect-file-name path)))
+    (prf/shell--generate-buffer-name-remote-from-vec vec)))
+
+(defun prf/shell--generate-buffer-name-remote-from-vec (vec)
+  (let (user host)
+    (concat
+     (tramp-file-name-user vec) "@" (tramp-file-name-host vec))))
+
+
+
+;; PRIVATE UTILS: BUFFER DIPLAY BEHAVIOUR
+
+(defun prf/shell--maybe-register-buffer-display-same-win (basename)
+  (let ((entry `(,(concat "^\\*" basename "\\*\\(.*\\)$") display-buffer-same-window)))
+    ;; NB: before Emacs 25, shell-mode buffers would display in same window.
+    (when (and (>= emacs-major-version 25)
+               (not (member entry display-buffer-alist)))
+      (add-to-list 'display-buffer-alist entry))))
+
+
+
+
+(provide 'prf-shell)
+
+;;; prf-shell.el ends here.
