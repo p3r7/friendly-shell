@@ -2,8 +2,8 @@
 
 This repository holds several packages:
 
- - `prf-shell-command`: Better shell-command API
- - `prf-shell`: Better interactive shell API
+ - `prf-shell-command`: Better shell-command API ([blog post](https://www.eigenbahn.com/2020/01/19/painless-emacs-shell-commands))
+ - `prf-shell`: Better interactive shell API ([blog post](https://www.eigenbahn.com/2020/01/21/painless-emacs-interactive-shells))
  - `prf-remote-shell`: Human-friendly spawning of remote shells
 
 Examples can be found in [examples.md](examples.md).
