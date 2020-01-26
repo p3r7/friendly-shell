@@ -50,10 +50,8 @@
 
 ;; INTERACTIVE SHELLS
 
-;; REVIEW: any use to pass command-switch?
-;; maybe when launchin a shell-command from a shell-mode buffer ?
 (cl-defun prf-shell (&key path
-                          interpreter interpreter-args command-switch
+                          interpreter interpreter-args
                           w32-arg-quote)
   "Create a shell at given PATH, using given INTERPRETER binary."
   (interactive)
@@ -72,7 +70,6 @@
     :path path
     :interpreter interpreter
     :interpreter-args interpreter-args
-    :command-switch command-switch
     :w32-arg-quote w32-arg-quote))
 
 
