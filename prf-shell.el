@@ -3,9 +3,9 @@
 ;; Copyright (C) 2019-2020 Jordan Besly
 ;;
 ;; Version: 0.1.0
-;; Keywords: tramp, shell
-;; URL: https://github.com/p3r7/prf-tramp
-;; Package-Requires: ((with-shell-interpreter "0.1.0"))
+;; Keywords: processes, terminals
+;; URL: https://github.com/p3r7/prf-shell
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.1.0"))
 ;;
 ;; Permission is hereby granted to use and distribute this code, with or
 ;; without modifications, provided that this copyright notice is copied with
@@ -25,6 +25,8 @@
 
 ;; REQUIRES
 
+(require 'cl-lib)
+
 (require 'tramp)
 (require 'tramp-sh)
 
@@ -34,11 +36,15 @@
 
 ;; VARS
 
-(defvar prf/shell-spawn-in-same-win 't)
+(defvar prf-shell-spawn-in-same-win 't
+  "If 't, shell buffers will spawn in the same window.")
 
-(defvar prf/shell-default-buffer-name "shell")
-(defvar prf/shell-buffer-local-name-construction-fn #'prf/shell--generate-buffer-name-local)
-(defvar prf/shell-buffer-remote-name-construction-fn #'prf/shell--generate-buffer-name-remote)
+(defvar prf-shell-default-buffer-name "shell"
+  "Default buffer name for local shells.")
+(defvar prf-shell-buffer-local-name-construction-fn #'prf-shell--generate-buffer-name-local
+  "Function to generate local shell buffer names.")
+(defvar prf-shell-buffer-remote-name-construction-fn #'prf-shell--generate-buffer-name-remote
+  "Function to generate remote shell buffer names.")
 
 
 
@@ -46,49 +52,53 @@
 
 ;; REVIEW: any use to pass command-switch?
 ;; maybe when launchin a shell-command from a shell-mode buffer ?
-(cl-defun prf/shell (&key path
+(cl-defun prf-shell (&key path
                           interpreter interpreter-args command-switch
                           w32-arg-quote)
   "Create a shell at given PATH, using given INTERPRETER binary."
   (interactive)
 
   (with-shell-interpreter
-   :form
-   (let* ((is-remote (file-remote-p path))
-          (interpreter (with-shell-interpreter--normalize-path interpreter))
-          (shell-buffer-basename (prf/shell--generate-buffer-name is-remote interpreter path))
-          (shell-buffer-name (generate-new-buffer-name (concat "*" shell-buffer-basename "*")))
-          (current-prefix-arg '(4))
-          (comint-process-echoes t))
-     (when prf/shell-spawn-in-same-win
-       (prf/shell--maybe-register-buffer-display-same-win shell-buffer-basename))
-     (shell shell-buffer-name))
-   :path path
-   :interpreter interpreter
-   :interpreter-args interpreter-args
-   :command-switch command-switch
-   :w32-arg-quote w32-arg-quote))
+      :form
+    (let* ((is-remote (file-remote-p path))
+           (interpreter (with-shell-interpreter--normalize-path interpreter))
+           (shell-buffer-basename (prf-shell--generate-buffer-name is-remote interpreter path))
+           (shell-buffer-name (generate-new-buffer-name (concat "*" shell-buffer-basename "*")))
+           (current-prefix-arg '(4))
+           (comint-process-echoes t))
+      (when prf-shell-spawn-in-same-win
+        (prf-shell--maybe-register-buffer-display-same-win shell-buffer-basename))
+      (shell shell-buffer-name))
+    :path path
+    :interpreter interpreter
+    :interpreter-args interpreter-args
+    :command-switch command-switch
+    :w32-arg-quote w32-arg-quote))
 
 
 
 ;; PRIVATE UTILS: BUFFER NAME
 
-(defun prf/shell--generate-buffer-name (is-remote interpreter path)
+(defun prf-shell--generate-buffer-name (is-remote interpreter path)
+  "Generate a buffer name accordint to INTERPRETER, PATH and whether IS-REMOTE or not."
   (let ((fn (if is-remote
-                prf/shell-buffer-remote-name-construction-fn
-              prf/shell-buffer-local-name-construction-fn)))
+                prf-shell-buffer-remote-name-construction-fn
+              prf-shell-buffer-local-name-construction-fn)))
     (funcall fn interpreter path)))
 
-(defun prf/shell--generate-buffer-name-local (&optional interpreter _path)
+(defun prf-shell--generate-buffer-name-local (&optional interpreter _path)
+  "Generate a buffer name for local shell, according to INTERPRETER."
   (if interpreter
       (with-shell-interpreter--get-interpreter-name interpreter)
-    prf/shell-default-buffer-name))
+    prf-shell-default-buffer-name))
 
-(defun prf/shell--generate-buffer-name-remote (intepreter path)
+(defun prf-shell--generate-buffer-name-remote (interpreter path)
+  "Generate a buffer name for remote shell, according to INTERPRETER and PATH."
   (let ((vec (tramp-dissect-file-name path)))
-    (prf/shell--generate-buffer-name-remote-from-vec vec)))
+    (prf-shell--generate-buffer-name-remote-from-vec vec)))
 
-(defun prf/shell--generate-buffer-name-remote-from-vec (vec)
+(defun prf-shell--generate-buffer-name-remote-from-vec (vec)
+  "Generate a buffer name for remote shell, from VEC (split tramp path)."
   (let (user host)
     (concat
      (tramp-file-name-user vec) "@" (tramp-file-name-host vec))))
@@ -97,7 +107,8 @@
 
 ;; PRIVATE UTILS: BUFFER DIPLAY BEHAVIOUR
 
-(defun prf/shell--maybe-register-buffer-display-same-win (basename)
+(defun prf-shell--maybe-register-buffer-display-same-win (basename)
+  "If necessary, register buffer buffers containing BASENAME as spawning in the same window."
   (let ((entry `(,(concat "^\\*" basename "\\*\\(.*\\)$") display-buffer-same-window)))
     ;; NB: before Emacs 25, shell-mode buffers would display in same window.
     (when (and (>= emacs-major-version 25)
@@ -109,4 +120,4 @@
 
 (provide 'prf-shell)
 
-;;; prf-shell.el ends here.
+;;; prf-shell.el ends here

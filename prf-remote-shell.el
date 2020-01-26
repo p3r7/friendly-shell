@@ -3,9 +3,9 @@
 ;; Copyright (C) 2019-2020 Jordan Besly
 ;;
 ;; Version: 0.1.0
-;; Keywords: tramp, shell
-;; URL: https://github.com/p3r7/prf-tramp
-;; Package-Requires: ((prf-shell "0.1.0")(prf-tramp "0.1.0")(prf-tramp-friendly-parsing "0.1.0"))
+;; Keywords: processes, terminals
+;; URL: https://github.com/p3r7/prf-shell
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(prf-shell "0.1.0")(prf-tramp "0.1.0")(prf-tramp-friendly-parsing "0.1.0"))
 ;;
 ;; Permission is hereby granted to use and distribute this code, with or
 ;; without modifications, provided that this copyright notice is copied with
@@ -25,6 +25,8 @@
 
 ;; REQUIRES
 
+(require 'cl-lib)
+
 (require 'tramp)
 (require 'tramp-sh)
 
@@ -36,25 +38,24 @@
 
 ;; VARS
 
-(defvar prf/remote-shell-buffer-name-regexp "^\\*\\(.*\\)@\\(.*\\)\\*\\(.*\\)$")
+(defvar prf-remote-shell-buffer-name-regexp "^\\*\\(.*\\)@\\(.*\\)\\*\\(.*\\)$")
 
 
 
 ;; INTERACTIVE SHELLS
 
-(cl-defun prf/remote-shell (&key path
+(cl-defun prf-remote-shell (&key path
                                  interpreter interpreter-args command-switch
                                  w32-arg-quote)
-  "Open a remote shell to host (extracted from PATH).
-PATH can is in the form HOST_CNNX[:LOCALNAME],
+  "Open a remote shell to host (extracted from :path).
+:path can is in the form HOST_CNNX[:LOCALNAME],
 where HOST_CNNX can be any of:
  - HOST
  - USER@HOST
  - /METHOD:USER@HOST
  - /METHOD:HOST
- - empty (for local shell)
 
-As such, this is a uder-friendly wrapper around `prf/shell' for remote connections."
+As such, this is a user-friendly wrapper around `prf-shell' for remote connections."
   (interactive)
   (let* ((path (or path (read-string "Host: ")))
          (path (prf/tramp/sanitize-path path))
@@ -79,7 +80,7 @@ As such, this is a uder-friendly wrapper around `prf/shell' for remote connectio
         (setq path (tramp-make-tramp-file-name method user 'nil host 'nil localname))
       (setq path (tramp-make-tramp-file-name method user host localname)))
 
-    (prf/shell :path path
+    (prf-shell :path path
                :interpreter interpreter
                :interpreter-args interpreter-args
                :command-switch command-switch
@@ -89,16 +90,16 @@ As such, this is a uder-friendly wrapper around `prf/shell' for remote connectio
 
 ;; INIT
 
-(defun prf/remote-shell-register-display-same-window ()
+(defun prf-remote-shell-register-display-same-window ()
   "Register remote shell buffers to display in same window.
-Assumes `prf/remote-shell-buffer-name-regexp' and `prf/shell-buffer-remote-name-construction-fn' are kept with their default values."
+Assumes `prf-remote-shell-buffer-name-regexp' and `prf/shell-buffer-remote-name-construction-fn' are kept with their default values."
   (when (>= emacs-major-version 25)
     ;; NB: before Emacs 25, shell-mode buffers would display in same window.
-    (add-to-list 'display-buffer-alist `(,prf/remote-shell-buffer-name-regexp display-buffer-same-window))))
+    (add-to-list 'display-buffer-alist `(,prf-remote-shell-buffer-name-regexp display-buffer-same-window))))
 
 
 
 
 (provide 'prf-remote-shell)
 
-;;; prf-remote-shell.el ends here.
+;;; prf-remote-shell.el ends here
