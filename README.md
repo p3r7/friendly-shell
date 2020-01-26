@@ -97,6 +97,25 @@ PATH can be local or remote.
 
 
 ## Similar projects
-- https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org#shell-there
-- https://github.com/killdash9/better-shell
-- https://github.com/randymorris/tramp-term.el
+
+#### [Howard Abrams' dot emacs](https://github.com/howardabrams/dot-files)
+
+Howard has a lot of goodies related to remote interactive shells and eshell.
+
+Notably:
+
+ - command [eshell-here ](https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org#shell-here) that behaves like `prf/shell` called interactively, except spawning eshell instead of shell.
+ - command [eshell-there](https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org#shell-there) that is very similar to `prf/remote-shell`, except spawning eshell instead of shell
+ - [various commands](https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org#shell-favorites) for spawning remote shells given host aliases. He also defines a `remote-shell-command` that behaves like `prf/shell-command`.
+
+
+#### [killdash9/better-shell](https://github.com/killdash9/better-shell)
+
+This package provides command `better-shell-for-current-dir` which is very similar to `prf/shell` called interactively. One key difference is that it implements a mechanism for reusing existing shell if appropriate.
+
+It also provides command `better-shell-remote-open` whihc behaves like `prf/remote-shell` except it provides autocompletion from `~/.ssh/known_hosts`.
+
+
+#### [randymorris/tramp-term](https://github.com/randymorris/tramp-term.el)
+
+Bindings between term.el and TRAMP to ease the creation of remote term buffers.
