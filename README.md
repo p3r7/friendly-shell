@@ -113,7 +113,7 @@ Notably:
 
 This package provides command `better-shell-for-current-dir` which is very similar to `prf/shell` called interactively. One key difference is that it implements a mechanism for reusing existing shell if appropriate.
 
-It also provides command `better-shell-remote-open` whihc behaves like `prf/remote-shell` except it provides autocompletion from `~/.ssh/known_hosts`.
+It also provides command `better-shell-remote-open` which behaves like `prf/remote-shell` except it provides autocompletion from `~/.ssh/known_hosts`.
 
 
 #### [randymorris/tramp-term](https://github.com/randymorris/tramp-term.el)
