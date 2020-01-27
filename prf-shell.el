@@ -57,20 +57,25 @@
   (interactive)
 
   (with-shell-interpreter
-      :form
-    (let* ((is-remote (file-remote-p path))
+    :path path
+    :interpreter interpreter
+    :interpreter-args interpreter-args
+    :w32-arg-quote w32-arg-quote
+    :form
+    (let* ((path (or path default-directory))
+           (is-remote (file-remote-p path))
+           (interpreter (or interpreter
+                            (if is-remote
+                                with-shell-interpreter-default-remote
+                              shell-file-name)))
            (interpreter (with-shell-interpreter--normalize-path interpreter))
-           (shell-buffer-basename (prf-shell--generate-buffer-name is-remote interpreter path))
+           (shell-buffer-basename (prf-shell--generate-buffer-name is-remote interpreter default-directory))
            (shell-buffer-name (generate-new-buffer-name (concat "*" shell-buffer-basename "*")))
            (current-prefix-arg '(4))
            (comint-process-echoes t))
       (when prf-shell-spawn-in-same-win
         (prf-shell--maybe-register-buffer-display-same-win shell-buffer-basename))
-      (shell shell-buffer-name))
-    :path path
-    :interpreter interpreter
-    :interpreter-args interpreter-args
-    :w32-arg-quote w32-arg-quote))
+      (shell shell-buffer-name))))
 
 
 
