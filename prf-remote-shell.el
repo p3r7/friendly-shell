@@ -46,6 +46,7 @@
 
 (cl-defun prf-remote-shell (&key path
                                  interpreter interpreter-args
+                                 command-switch
                                  w32-arg-quote)
   "Open a remote shell to host (extracted from :path).
 :path can is in the form HOST_CNNX[:LOCALNAME],
@@ -83,6 +84,7 @@ As such, this is a user-friendly wrapper around `prf-shell' for remote connectio
     (prf-shell :path path
                :interpreter interpreter
                :interpreter-args interpreter-args
+               :command-switch command-switch
                :w32-arg-quote w32-arg-quote)))
 
 
