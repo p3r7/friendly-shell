@@ -52,6 +52,7 @@
 
 (cl-defun prf-shell (&key path
                           interpreter interpreter-args
+                          command-switch
                           w32-arg-quote
                           buffer-name)
   "Create a shell at given PATH, using given INTERPRETER binary."
@@ -70,6 +71,8 @@
                                 with-shell-interpreter-default-remote
                               shell-file-name)))
            (interpreter (with-shell-interpreter--normalize-path interpreter))
+           (interpreter-name (with-shell-interpreter--get-interpreter-name interpreter))
+           (explicit-interpreter-args-var (intern (concat "explicit-" interpreter-name "-args")))
            (shell-buffer-basename (or buffer-name
                                       (prf-shell--generate-buffer-name is-remote interpreter default-directory)))
            (shell-buffer-name (generate-new-buffer-name (concat "*" shell-buffer-basename "*")))
@@ -77,7 +80,17 @@
            (comint-process-echoes t))
       (when prf-shell-spawn-in-same-win
         (prf-shell--maybe-register-buffer-display-same-win shell-buffer-basename))
-      (shell shell-buffer-name))))
+      (shell shell-buffer-name)
+
+      (with-current-buffer shell-buffer-name
+        (make-local-variable 'explicit-shell-file-name)
+        (make-local-variable explicit-interpreter-args-var)
+
+        ;; NB: those are necessary when launching `shell-command' and friends from the interactive shell buffer
+        (make-local-variable 'shell-file-name)
+        (make-local-variable 'shell-command-switch)
+
+        (make-local-variable 'w32-quote-process-args)))))
 
 
 
