@@ -93,23 +93,29 @@
       (when prf-shell-spawn-in-same-win
         (prf-shell--maybe-register-buffer-display-same-win shell-buffer-basename))
 
-      ;; NB: when making those var buffer-local, we seem to be forced to bind them to the buffer beforehand
-      ;; otherwise second launched shell will ignore lexical binding and revert to default values
       (with-current-buffer shell-buffer
+        ;; NB: when making those var buffer-local, we seem to be forced to bind them to the buffer beforehand
+        ;; otherwise, starting from 2nd launched shell, lexical binding will be ignored
         (set (make-local-variable 'explicit-shell-file-name) og-explicit-shell-file-name)
         (set (make-local-variable 'shell-file-name) og-shell-file-name)
         (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
         ;; NB: necessary when launching `shell-command' and friends from the interactive shell buffer
-        (set (make-local-variable 'shell-command-switch) og-shell-command-switch))
+        (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
+        (set (make-local-variable 'comint-process-echoes) t))
 
       (shell shell-buffer)
 
-      ;; NB: comint / shell undoes some of our bindings, so we need to set them back
       (with-current-buffer shell-buffer
+        ;; NB: comint / shell undoes some of our bindings, so we need to set them back
         (set (make-local-variable 'explicit-shell-file-name) og-explicit-shell-file-name)
         (set (make-local-variable 'shell-file-name) og-shell-file-name)
         (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
-        (set (make-local-variable 'shell-command-switch) og-shell-command-switch))
+        (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
+
+        ;; assumes echoes input (e.g. 'stty echo' for dash), for TRAMP to do proper dirtrack
+        ;; we hide this echoed line to the end user
+        ;; REVIEW: should use a keyword to activate is conditionally
+        (setq comint-process-echoes t))
 
       shell-buffer)))
 
