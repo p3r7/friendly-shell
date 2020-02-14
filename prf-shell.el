@@ -64,7 +64,9 @@
     :interpreter-args interpreter-args
     :w32-arg-quote w32-arg-quote
     :form
-    (let* ((path (or path default-directory))
+    (let* (
+           ;; duplicated code from `with-shell-interpreter', but necessayr as not special vars and lexical binding is on
+           (path (or path default-directory))
            (is-remote (file-remote-p path))
            (interpreter (or interpreter
                             (if is-remote
@@ -73,24 +75,43 @@
            (interpreter (with-shell-interpreter--normalize-path interpreter))
            (interpreter-name (with-shell-interpreter--get-interpreter-name interpreter))
            (explicit-interpreter-args-var (intern (concat "explicit-" interpreter-name "-args")))
+           ;; shell buffer name
            (shell-buffer-basename (or buffer-name
                                       (prf-shell--generate-buffer-name is-remote interpreter default-directory)))
            (shell-buffer-name (generate-new-buffer-name (concat "*" shell-buffer-basename "*")))
+           (shell-buffer (get-buffer-create shell-buffer-name))
+           ;; special vars
            (current-prefix-arg '(4))
-           (comint-process-echoes t))
+           (comint-process-echoes t)
+           ;; copies of special vars set by with-shell-interpreter
+           (og-explicit-shell-file-name explicit-shell-file-name)
+           (og-shell-file-name shell-file-name)
+           (og-explicit-interpreter-args (symbol-value explicit-interpreter-args-var))
+           (og-shell-command-switch shell-command-switch)
+           (og-w32-quote-process-args w32-quote-process-args))
+
       (when prf-shell-spawn-in-same-win
         (prf-shell--maybe-register-buffer-display-same-win shell-buffer-basename))
-      (shell shell-buffer-name)
 
-      (with-current-buffer shell-buffer-name
-        (make-local-variable 'explicit-shell-file-name)
-        (make-local-variable explicit-interpreter-args-var)
+      ;; NB: when making those var buffer-local, we seem to be forced to bind them to the buffer beforehand
+      ;; otherwise second launched shell will ignore lexical binding and revert to default values
+      (with-current-buffer shell-buffer
+        (set (make-local-variable 'explicit-shell-file-name) og-explicit-shell-file-name)
+        (set (make-local-variable 'shell-file-name) og-shell-file-name)
+        (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
+        ;; NB: necessary when launching `shell-command' and friends from the interactive shell buffer
+        (set (make-local-variable 'shell-command-switch) og-shell-command-switch))
 
-        ;; NB: those are necessary when launching `shell-command' and friends from the interactive shell buffer
-        (make-local-variable 'shell-file-name)
-        (make-local-variable 'shell-command-switch)
+      (shell shell-buffer)
 
-        (make-local-variable 'w32-quote-process-args)))))
+      ;; NB: comint / shell undoes some of our bindings, so we need to set them back
+      (with-current-buffer shell-buffer
+        (set (make-local-variable 'explicit-shell-file-name) og-explicit-shell-file-name)
+        (set (make-local-variable 'shell-file-name) og-shell-file-name)
+        (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
+        (set (make-local-variable 'shell-command-switch) og-shell-command-switch))
+
+      shell-buffer)))
 
 
 
