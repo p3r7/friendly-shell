@@ -54,6 +54,7 @@
                           interpreter interpreter-args
                           command-switch
                           w32-arg-quote
+                          allow-local-vars
                           buffer-name)
   "Create a shell at given PATH, using given INTERPRETER binary."
   (interactive)
@@ -63,16 +64,14 @@
     :interpreter interpreter
     :interpreter-args interpreter-args
     :w32-arg-quote w32-arg-quote
+    :allow-local-vars allow-local-vars
     :form
     (let* (
            ;; duplicated code from `with-shell-interpreter', but necessayr as not special vars and lexical binding is on
            (path (or path default-directory))
            (is-remote (file-remote-p path))
-           (interpreter (or interpreter
-                            (if is-remote
-                                with-shell-interpreter-default-remote
-                              shell-file-name)))
-           (interpreter (with-shell-interpreter--normalize-path interpreter))
+           (ignore-local-vars (not allow-local-vars))
+           (interpreter (with-shell-interpreter--get-interpreter-value is-remote ignore-local-vars interpreter))
            (interpreter-name (with-shell-interpreter--get-interpreter-name interpreter))
            (explicit-interpreter-args-var (intern (concat "explicit-" interpreter-name "-args")))
            ;; shell buffer name
