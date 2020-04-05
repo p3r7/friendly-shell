@@ -10,7 +10,7 @@ Examples can be found in [examples.md](examples.md).
 
 They rely heavily on package [with-shell-interpreter](https://github.com/p3r7/with-shell-interpreter).
 
-`prf-remote-shell` relies aditionally on helper packages from [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path).
+`prf-remote-shell` relies additionally on helper packages from [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path).
 
 
 ## Installation
