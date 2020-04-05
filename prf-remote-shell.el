@@ -5,14 +5,25 @@
 ;; Version: 0.1.0
 ;; Keywords: processes, terminals
 ;; URL: https://github.com/p3r7/prf-shell
-;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(prf-shell "0.1.0")(prf-tramp "0.1.0")(prf-tramp-friendly-parsing "0.1.0"))
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(prf-shell "0.1.0")(with-shell-interpreter "0.1.0")(friendly-tramp-path "0.1.0"))
 ;;
-;; Permission is hereby granted to use and distribute this code, with or
-;; without modifications, provided that this copyright notice is copied with
-;; it. Like anything else that's free, lusty-explorer.el is provided *as is*
-;; and comes with no warranty of any kind, either expressed or implied. In no
-;; event will the copyright holder be liable for any damages resulting from
-;; the use of this software.
+;; Permission is hereby granted, free of charge, to any person obtaining a copy
+;; of this software and associated documentation files (the "Software"), to deal
+;; in the Software without restriction, including without limitation the rights
+;; to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+;; copies of the Software, and to permit persons to whom the Software is
+;; furnished to do so, subject to the following conditions:
+
+;; The above copyright notice and this permission notice shall be included in all
+;; copies or substantial portions of the Software.
+
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;; SOFTWARE.
 
 ;;; Commentary:
 ;;  -----------
@@ -30,9 +41,9 @@
 (require 'tramp)
 (require 'tramp-sh)
 
+(require 'friendly-tramp-path)
+(require 'with-shell-interpreter)
 (require 'prf-shell)
-(require 'prf-tramp)
-(require 'prf-tramp-friendly-parsing)
 
 
 
@@ -59,22 +70,14 @@ where HOST_CNNX can be any of:
 As such, this is a user-friendly wrapper around `prf-shell' for remote connections."
   (interactive)
   (let* ((path (or path (read-string "Host: ")))
-         (path (prf/tramp/sanitize-path path))
-         (vec (prf/tramp/path/dissect path))
+         (path (with-shell-interpreter--normalize-path path))
+         (vec (friendly-tramp-path-disect path))
          (method (tramp-file-name-method vec))
          (user (tramp-file-name-user vec))
          (domain (tramp-file-name-domain vec))
          (host (tramp-file-name-host vec))
          (port (tramp-file-name-port vec))
          (localname (tramp-file-name-localname vec)))
-
-    ;; default values
-    (if (eq (length method) 0)
-        (setq method tramp-default-method))
-    (if (eq (length user) 0)
-        (setq user tramp-default-user))
-    (if (eq (length localname) 0)
-        (setq localname "/"))
 
     (if (>= emacs-major-version 26)
         ;; new DOMAIN and PORT parameters

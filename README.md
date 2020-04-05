@@ -10,7 +10,7 @@ Examples can be found in [examples.md](examples.md).
 
 They rely heavily on package [with-shell-interpreter](https://github.com/p3r7/with-shell-interpreter).
 
-`prf-remote-shell` relies aditionally on helper packages from [p3r7/prf-tramp](https://github.com/p3r7/prf-tramp).
+`prf-remote-shell` relies aditionally on helper packages from [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path).
 
 
 ## Installation
@@ -35,15 +35,13 @@ For now, the recommended way to install is with [use-package](https://github.com
 And for `prf-remote-shell`:
 
 ```el
-(use-package prf-tramp
-  :quelpa (prf-tramp :fetcher github :repo "p3r7/prf-tramp"
+(use-package friendly-tramp-path
+  :quelpa (friendly-tramp-path :fetcher github :repo "p3r7/friendly-tramp-path"
   :after tramp))
-(use-package prf-tramp-friendly-parsing
-  :quelpa (prf-tramp-friendly-parsing :fetcher github :repo "p3r7/prf-tramp"))
 
 (use-package prf-remote-shell
   :quelpa (prf-remote-shell :fetcher github :repo "p3r7/prf-shell")
-  :after (prf-shell prf-tramp prf-tramp-friendly-parsing))
+  :after (prf-shell friendly-tramp-path))
 ```
 
 
