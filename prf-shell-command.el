@@ -1,4 +1,4 @@
-;;; prf-shell-command.el --- Better shell-command API.
+;;; prf-shell-command.el --- Better shell-command API -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Jordan Besly
 ;;
