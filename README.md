@@ -109,7 +109,7 @@ Notably:
 
 #### [killdash9/better-shell](https://github.com/killdash9/better-shell)
 
-This package provides command `better-shell-for-current-dir` which is very similar to `prf-shell` called interactively. One key difference is that it implements a mechanism for reusing existing shell if appropriate.
+This package provides command `better-shell-for-current-dir` which is very similar to `prf-shell` called interactively. One key difference is that it implements a mechanism for reusing existing shell buffers if appropriate.
 
 It also provides command `better-shell-remote-open` which behaves like `prf-remote-shell` except it provides autocompletion from `~/.ssh/known_hosts`.
 
