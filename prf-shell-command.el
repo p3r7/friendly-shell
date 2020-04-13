@@ -51,10 +51,10 @@
   "Call COMMAND w/ `shell-command-to-string' with :interpreter on host and location described by :path.
 For more details about all the keyword arguments, see `with-shell-interpreter'"
   (with-shell-interpreter
-      :form (shell-command-to-string command)
-      :path path
-      :interpreter interpreter
-      :command-switch command-switch))
+    :form (shell-command-to-string command)
+    :path path
+    :interpreter interpreter
+    :command-switch command-switch))
 
 (cl-defun prf-async-shell-command (command &key output-buffer error-buffer
                                            path interpreter command-switch)
@@ -62,10 +62,10 @@ For more details about all the keyword arguments, see `with-shell-interpreter'"
 An :output-buffer and :error-buffer can be specified.
 For more details about all the keyword arguments, see `with-shell-interpreter'"
   (with-shell-interpreter
-      :form (async-shell-command command output-buffer error-buffer)
-      :path path
-      :interpreter interpreter
-      :command-switch command-switch))
+    :form (async-shell-command command output-buffer error-buffer)
+    :path path
+    :interpreter interpreter
+    :command-switch command-switch))
 
 (cl-defun prf-shell-command (command &key output-buffer error-buffer
                                      path interpreter command-switch)
@@ -73,10 +73,10 @@ For more details about all the keyword arguments, see `with-shell-interpreter'"
 An :output-buffer and :error-buffer can be specified.
 For more details about all the keyword arguments, see `with-shell-interpreter'"
   (with-shell-interpreter
-      :form (shell-command command output-buffer error-buffer)
-      :path path
-      :interpreter interpreter
-      :command-switch command-switch))
+    :form (shell-command command output-buffer error-buffer)
+    :path path
+    :interpreter interpreter
+    :command-switch command-switch))
 
 
 
