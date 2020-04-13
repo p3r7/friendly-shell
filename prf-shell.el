@@ -57,6 +57,11 @@
 (defvar prf-shell-buffer-remote-name-construction-fn #'prf-shell--generate-buffer-name-remote
   "Function to generate remote shell buffer names.")
 
+;; NB: only bound on Windows build of Emacs
+(unless (boundp 'w32-quote-process-args)
+  ;; tame lexical binding warnings
+  (defvar w32-quote-process-args))
+
 
 
 ;; INTERACTIVE SHELLS
