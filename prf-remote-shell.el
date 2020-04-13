@@ -71,7 +71,7 @@ As such, this is a user-friendly wrapper around `prf-shell' for remote connectio
   (interactive)
   (let* ((path (or path (read-string "Host: ")))
          (path (with-shell-interpreter--normalize-path path))
-         (vec (friendly-tramp-path-disect path))
+         (vec (friendly-tramp-path-dissect path))
          (method (tramp-file-name-method vec))
          (user (tramp-file-name-user vec))
          (domain (tramp-file-name-domain vec))
