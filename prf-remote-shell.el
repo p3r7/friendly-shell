@@ -80,8 +80,7 @@ As such, this is a user-friendly wrapper around `prf-shell' for remote connectio
          (localname (tramp-file-name-localname vec)))
 
     (if (>= emacs-major-version 26)
-        ;; new DOMAIN and PORT parameters
-        (setq path (tramp-make-tramp-file-name method user 'nil host 'nil localname))
+        (setq path (tramp-make-tramp-file-name method user domain host port localname))
       (setq path (tramp-make-tramp-file-name method user host localname)))
 
     (prf-shell :path path
