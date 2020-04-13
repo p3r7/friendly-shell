@@ -74,6 +74,7 @@
     :path path
     :interpreter interpreter
     :interpreter-args interpreter-args
+    :command-switch command-switch
     :w32-arg-quote w32-arg-quote
     :allow-local-vars allow-local-vars
     :form
