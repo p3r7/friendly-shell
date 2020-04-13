@@ -1,4 +1,4 @@
-;;; prf-remote-shell.el --- Human-friendly remote interactive shells.
+;;; prf-remote-shell.el --- Human-friendly remote interactive shells -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Jordan Besly
 ;;

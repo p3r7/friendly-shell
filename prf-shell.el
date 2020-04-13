@@ -1,4 +1,4 @@
-;;; prf-shell.el --- Better shell-mode API.
+;;; prf-shell.el --- Better shell-mode API -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Jordan Besly
 ;;
