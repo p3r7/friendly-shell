@@ -20,8 +20,7 @@ Not yet on [Melpa](https://melpa.org/).
 For now, the recommended way to install is with [use-package](https://github.com/jwiegley/use-package), [quelpa](https://github.com/quelpa/quelpa) and [quelpa-use-package](https://github.com/quelpa/quelpa-use-package).
 
 ```el
-(use-package with-shell-interpreter
-  :quelpa (with-shell-interpreter :fetcher github :repo "p3r7/with-shell-interpreter"))
+(use-package with-shell-interpreter)
 
 (use-package prf-shell-command
   :quelpa (prf-shell-command :fetcher github :repo "p3r7/prf-shell")
@@ -36,7 +35,6 @@ And for `prf-remote-shell`:
 
 ```el
 (use-package friendly-tramp-path
-  :quelpa (friendly-tramp-path :fetcher github :repo "p3r7/friendly-tramp-path"
   :after tramp))
 
 (use-package prf-remote-shell
