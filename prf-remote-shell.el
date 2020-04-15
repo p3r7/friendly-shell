@@ -5,7 +5,7 @@
 ;; Version: 0.1.0
 ;; Keywords: processes, terminals
 ;; URL: https://github.com/p3r7/prf-shell
-;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(prf-shell "0.1.0")(with-shell-interpreter "0.1.0")(friendly-tramp-path "0.1.0"))
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(prf-shell "0.1.0")(with-shell-interpreter "0.1.0")(friendly-tramp-path "20200405.1514"))
 ;;
 ;; Permission is hereby granted, free of charge, to any person obtaining a copy
 ;; of this software and associated documentation files (the "Software"), to deal
@@ -60,14 +60,15 @@
                                  command-switch
                                  w32-arg-quote)
   "Open a remote shell to host (extracted from :path).
-:path can is in the form HOST_CNNX[:LOCALNAME],
-where HOST_CNNX can be any of:
- - HOST
- - USER@HOST
- - /METHOD:USER@HOST
- - /METHOD:HOST
+User-friendly wrapper around `prf-shell' for remote connections.
 
-As such, this is a user-friendly wrapper around `prf-shell' for remote connections."
+If not specified, prompt the user for :path.
+
+:path can be in any format supported by `friendly-tramp-path-dissect':
+ - \"/<method>:[<user>[%<domain>]@]<host>[%<port>][:<localname>]\" (regular TRAMP format)
+ - \"[<user>[%<domain>]@]<host>[%<port>][:<localname>]\" (permissive format)
+
+For more details about all the keyword arguments, see `with-shell-interpreter'."
   (interactive)
   (let* ((path (or path (read-string "Host: ")))
          (path (with-shell-interpreter--normalize-path path))
