@@ -156,8 +156,8 @@
       (with-shell-interpreter--get-interpreter-name interpreter)
     prf-shell-default-buffer-name))
 
-(defun prf-shell--generate-buffer-name-remote (interpreter path)
-  "Generate a buffer name for remote shell, according to INTERPRETER and PATH."
+(defun prf-shell--generate-buffer-name-remote (&optional _interpreter path)
+  "Generate a buffer name for remote shell, according to PATH."
   (let ((vec (tramp-dissect-file-name path)))
     (prf-shell--generate-buffer-name-remote-from-vec vec)))
 
