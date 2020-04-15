@@ -117,6 +117,8 @@
         (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
         ;; NB: necessary when launching `shell-command' and friends from the interactive shell buffer
         (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
+        (when (boundp 'w32-quote-process-args)
+          (set (make-local-variable 'shell-command-switch) og-w32-quote-process-args))
         (set (make-local-variable 'comint-process-echoes) t))
 
       (shell shell-buffer)
@@ -127,6 +129,8 @@
         (set (make-local-variable 'shell-file-name) og-shell-file-name)
         (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
         (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
+        (when (boundp 'w32-quote-process-args)
+          (set (make-local-variable 'shell-command-switch) og-w32-quote-process-args))
 
         ;; assumes echoes input (e.g. 'stty echo' for dash), for TRAMP to do proper dirtrack
         ;; we hide this echoed line to the end user
