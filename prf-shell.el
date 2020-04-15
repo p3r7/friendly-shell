@@ -163,9 +163,8 @@
 
 (defun prf-shell--generate-buffer-name-remote-from-vec (vec)
   "Generate a buffer name for remote shell, from VEC (split tramp path)."
-  (let (user host)
-    (concat
-     (tramp-file-name-user vec) "@" (tramp-file-name-host vec))))
+  (concat
+   (tramp-file-name-user vec) "@" (tramp-file-name-host vec)))
 
 
 
