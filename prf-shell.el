@@ -5,7 +5,7 @@
 ;; Version: 0.1.0
 ;; Keywords: processes, terminals
 ;; URL: https://github.com/p3r7/prf-shell
-;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "20200319.1351"))
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.1.0"))
 ;;
 ;; Permission is hereby granted, free of charge, to any person obtaining a copy
 ;; of this software and associated documentation files (the "Software"), to deal
