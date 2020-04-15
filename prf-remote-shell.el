@@ -53,6 +53,34 @@
 
 
 
+;; PRIVATE MACROS
+
+(defmacro prf-remote-shell--make-tramp-file-name (vec)
+  "Construct Tramp file name from Tramp VEC.
+Handles the signature of `tramp-make-tramp-file-name' changing
+over time."
+  (if (>= emacs-major-version 26)
+      `(let ((method (tramp-file-name-method ,vec))
+             (user (tramp-file-name-user ,vec))
+             (domain (tramp-file-name-domain ,vec))
+             (host (tramp-file-name-host ,vec))
+             (port (tramp-file-name-port ,vec))
+             (localname (tramp-file-name-localname ,vec)))
+         (tramp-make-tramp-file-name method
+                                     user domain
+                                     host port
+                                     localname))
+    `(let ((method (tramp-file-name-method ,vec))
+           (user (tramp-file-name-user ,vec))
+           (host (tramp-file-name-host ,vec))
+           (localname (tramp-file-name-localname ,vec)))
+       (tramp-make-tramp-file-name method
+                                   user
+                                   host
+                                   localname))))
+
+
+
 ;; INTERACTIVE SHELLS
 
 (cl-defun prf-remote-shell (&key path
@@ -73,17 +101,7 @@ For more details about all the keyword arguments, see `with-shell-interpreter'."
   (let* ((path (or path (read-string "Host: ")))
          (path (with-shell-interpreter--normalize-path path))
          (vec (friendly-tramp-path-dissect path))
-         (method (tramp-file-name-method vec))
-         (user (tramp-file-name-user vec))
-         (domain (tramp-file-name-domain vec))
-         (host (tramp-file-name-host vec))
-         (port (tramp-file-name-port vec))
-         (localname (tramp-file-name-localname vec)))
-
-    (if (>= emacs-major-version 26)
-        (setq path (tramp-make-tramp-file-name method user domain host port localname))
-      (setq path (tramp-make-tramp-file-name method user host localname)))
-
+         (path (prf-remote-shell--make-tramp-file-name vec)))
     (prf-shell :path path
                :interpreter interpreter
                :interpreter-args interpreter-args
