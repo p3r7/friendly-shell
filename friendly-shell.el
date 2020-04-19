@@ -51,11 +51,11 @@
 ;; INTERACTIVE SHELLS
 
 (cl-defun friendly-shell (&key path
-                          interpreter interpreter-args
-                          command-switch
-                          w32-arg-quote
-                          allow-local-vars
-                          buffer-name)
+                               interpreter interpreter-args
+                               command-switch
+                               w32-arg-quote
+                               allow-local-vars
+                               buffer-name)
   "Create a shell at given PATH, using given INTERPRETER binary."
   (interactive)
 
