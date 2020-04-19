@@ -1,11 +1,11 @@
-;;; prf-remote-shell.el --- Human-friendly remote interactive shells -*- lexical-binding: t; -*-
+;;; friendly-remote-shell.el --- Human-friendly remote interactive shells -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Jordan Besly
 ;;
 ;; Version: 0.1.0
 ;; Keywords: processes, terminals
-;; URL: https://github.com/p3r7/prf-shell
-;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.1.0")(friendly-tramp-path "0.1.0"))
+;; URL: https://github.com/p3r7/friendly-shell
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.1.0")(friendly-tramp-path "0.1.0")(friendly-shell "0.2.0"))
 ;;
 ;; SPDX-License-Identifier: MIT
 
@@ -27,19 +27,19 @@
 
 (require 'friendly-tramp-path)
 (require 'with-shell-interpreter)
-(require 'prf-shell)
+(require 'friendly-shell)
 
 
 
 ;; VARS
 
-(defvar prf-remote-shell-buffer-name-regexp "^\\*\\(.*\\)@\\(.*\\)\\*\\(.*\\)$")
+(defvar friendly-remote-shell-buffer-name-regexp "^\\*\\(.*\\)@\\(.*\\)\\*\\(.*\\)$")
 
 
 
 ;; PRIVATE MACROS
 
-(defmacro prf-remote-shell--make-tramp-file-name (vec)
+(defmacro friendly-remote-shell--make-tramp-file-name (vec)
   "Construct Tramp file name from Tramp VEC.
 Handles the signature of `tramp-make-tramp-file-name' changing
 over time."
@@ -67,12 +67,12 @@ over time."
 
 ;; INTERACTIVE SHELLS
 
-(cl-defun prf-remote-shell (&key path
-                                 interpreter interpreter-args
-                                 command-switch
-                                 w32-arg-quote)
+(cl-defun friendly-remote-shell (&key path
+                                      interpreter interpreter-args
+                                      command-switch
+                                      w32-arg-quote)
   "Open a remote shell to host (extracted from :path).
-User-friendly wrapper around `prf-shell' for remote connections.
+User-friendly wrapper around `friendly-shell' for remote connections.
 
 If not specified, prompt the user for :path.
 
@@ -85,27 +85,27 @@ For more details about all the keyword arguments, see `with-shell-interpreter'."
   (let* ((path (or path (read-string "Host: ")))
          (path (with-shell-interpreter--normalize-path path))
          (vec (friendly-tramp-path-dissect path))
-         (path (prf-remote-shell--make-tramp-file-name vec)))
-    (prf-shell :path path
-               :interpreter interpreter
-               :interpreter-args interpreter-args
-               :command-switch command-switch
-               :w32-arg-quote w32-arg-quote)))
+         (path (friendly-remote-shell--make-tramp-file-name vec)))
+    (friendly-shell :path path
+                    :interpreter interpreter
+                    :interpreter-args interpreter-args
+                    :command-switch command-switch
+                    :w32-arg-quote w32-arg-quote)))
 
 
 
 ;; INIT
 
-(defun prf-remote-shell-register-display-same-window ()
+(defun friendly-remote-shell-register-display-same-window ()
   "Register remote shell buffers to display in same window.
-Assumes `prf-remote-shell-buffer-name-regexp' and `prf/shell-buffer-remote-name-construction-fn' are kept with their default values."
+Assumes `friendly-remote-shell-buffer-name-regexp' and `prf/shell-buffer-remote-name-construction-fn' are kept with their default values."
   (when (>= emacs-major-version 25)
     ;; NB: before Emacs 25, shell-mode buffers would display in same window.
-    (add-to-list 'display-buffer-alist `(,prf-remote-shell-buffer-name-regexp display-buffer-same-window))))
+    (add-to-list 'display-buffer-alist `(,friendly-remote-shell-buffer-name-regexp display-buffer-same-window))))
 
 
 
 
-(provide 'prf-remote-shell)
+(provide 'friendly-remote-shell)
 
-;;; prf-remote-shell.el ends here
+;;; friendly-remote-shell.el ends here
