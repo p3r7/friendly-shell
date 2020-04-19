@@ -7,7 +7,7 @@
 Assuming the Raspberry Pi is equipped with a [X735 Power Management Board](http://www.suptronics.com/miniPCkits/x735_V2.0.html).
 
 ```el
-(prf-async-shell-command
+(friendly-shell-command-async
  "x730shutdown.sh"
  :output-buffer "*shutdown - raspberry*"
  :path "/ssh:pi@raspberry|sudo::/")
@@ -16,7 +16,7 @@ Assuming the Raspberry Pi is equipped with a [X735 Power Management Board](http:
 Otherwise:
 
 ```el
-(prf-async-shell-command
+(friendly-shell-command-async
  "halt"
  :output-buffer "*shutdown - raspberry*"
  :path "/ssh:pi@raspberry|sudo::/")
@@ -30,7 +30,7 @@ Assuming we're login in as the same user on the NAS with hostname `nas`.
 (defun shell-cmd/yt-dl-on-nas (&optional url)
   (interactive)
   (let ((url (or url (read-string "URL: "))))
-    (prf-async-shell-command
+    (friendly-shell-command-async
      (concat "youtube-dl " url)
      :output-buffer (concat "*yt-dl - " url "*")
      :path "/ssh:nas:/volume1/download/")))
@@ -43,7 +43,8 @@ Assuming we're login in as the same user on the NAS with hostname `nas`.
 ```el
 (defun shell/git-bash (&optional path)
   (interactive)
-  (prf-shell path "C:/Program Files/Git/bin/bash.exe"))
+  (friendly-shell :path path
+                  :interpreter "C:/Program Files/Git/bin/bash.exe"))
 ```
 
 #### Cygwin bash (under Windows)
@@ -51,5 +52,7 @@ Assuming we're login in as the same user on the NAS with hostname `nas`.
 ```el
 (defun prf/tramp/shell/cygwin-bash (&optional path)
   (interactive)
-  (prf-shell path "c:/cygwin64/bin/bash.exe"  (list "--init-file" (concat "/home/" (getenv "USERNAME") "/.bashrc"))))
+  (friendly-shell :path path
+                  :interpreter "c:/cygwin64/bin/bash.exe"
+                  :interpreter-args (list "--init-file" (concat "/home/" (getenv "USERNAME") "/.bashrc"))))
 ```
