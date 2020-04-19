@@ -40,7 +40,7 @@ For more details about all the keyword arguments, see `with-shell-interpreter'"
     :interpreter interpreter
     :command-switch command-switch))
 
-(cl-defun friendly-async-shell-command (command &key output-buffer error-buffer
+(cl-defun friendly-shell-command-async (command &key output-buffer error-buffer
                                                 path interpreter command-switch)
   "Call COMMAND w/ `async-shell-command' with :interpreter on host and location described by :path.
 An :output-buffer and :error-buffer can be specified.

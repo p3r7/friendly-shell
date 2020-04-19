@@ -60,7 +60,7 @@ Command for spawning interactive shells or helper function to create new interac
 Helpers functions to create commands launching (non-interactive) shell commands.
 
 * friendly-shell-command | [friendly-shell-command-to-string](#friendlyshell-command-to-string-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
-* friendly-shell-command | [friendly-async-shell-command](#friendlyasync-shell-command-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
+* friendly-shell-command | [friendly-shell-command-async](#friendlyshell-command-async-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
 
 
 ## Interractive Shells
@@ -87,7 +87,7 @@ Calls CMD with `shell-command-to-string` at given PATH.
 PATH can be local or remote.
 
 
-#### friendly-async-shell-command `(path cmd & interpreter interpreter-args command-switch)`
+#### friendly-shell-command-async `(path cmd & interpreter interpreter-args command-switch)`
 
 Calls CMD with `async-shell-command` at given PATH.
 
