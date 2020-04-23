@@ -68,7 +68,7 @@ Usage:
                     Should take no argument.
 :sentinel           Process sentinel function to associate to the command
                     proccess.
-                    Takes 2 arguments: process and output
+                    Takes 2 arguments: process and output.
                     See `set-process-sentinel' for more information.
 
 
@@ -85,7 +85,9 @@ For more details about the remaining keyword arguments, see `with-shell-interpre
         (let ((combined-sentinel
                (friendly-shell-command--build-process-sentinel
                 process
-                sentinel callback kill-buffer)))
+                :sentinel sentinel
+                :callback callback
+                :kill-buffer kill-buffer)))
           ;; REVIEW: why not use `set-process-sentinel'
           (setf (process-sentinel process) combined-sentinel)))
       win)
@@ -134,22 +136,29 @@ For more details about the remaining keyword arguments, see `with-shell-interpre
 ;; HELPERS: PROCESS SENTINELS
 
 (defun friendly-shell-command--kill-buffer-sentinel (process _output)
+  "Process sentinel to auto kill associated buffer once PROCESS dies."
   (unless (process-live-p process)
     (kill-buffer (process-buffer process))))
 
-(defun friendly-shell-command--build-process-sentinel (process sentinel callback do-kill-buffer)
-  (let (callback-sentinel kill-buffer-sentinel sentinel-list)
-    (when do-kill-buffer
-      (setq kill-buffer-sentinel #'friendly-shell-command--kill-buffer-sentinel))
-    (when callback
-      (setq callback-sentinel (lambda (_process _output)
-                                (unless (process-live-p process)
-                                  (funcall callback)))))
-    (setq sentinel-list (-remove #'null
-                                 (list sentinel callback-sentinel kill-buffer-sentinel)))
+(cl-defun friendly-shell-command--build-process-sentinel (process &key sentinel callback kill-buffer)
+         "Build a process sentinel for PROCESS.
 
-    (lambda (process line) (--each sentinel-list
-                        (funcall it process line)))))
+The output process sentinel is the merge of:
+ - :sentinel, if set
+ - :callback, if set
+ - `friendly-shell-command--kill-buffer-sentinel' if :kill-buffer is t"
+         (let (callback-sentinel kill-buffer-sentinel sentinel-list)
+           (when do-kill-buffer
+             (setq kill-buffer-sentinel #'friendly-shell-command--kill-buffer-sentinel))
+           (when callback
+             (setq callback-sentinel (lambda (_process _output)
+                                       (unless (process-live-p process)
+                                         (funcall callback)))))
+           (setq sentinel-list (-remove #'null
+                                        (list sentinel callback-sentinel kill-buffer-sentinel)))
+
+           (lambda (process line) (--each sentinel-list
+                               (funcall it process line)))))
 
 
 
