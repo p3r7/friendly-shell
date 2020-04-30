@@ -141,24 +141,24 @@ For more details about the remaining keyword arguments, see `with-shell-interpre
     (kill-buffer (process-buffer process))))
 
 (cl-defun friendly-shell-command--build-process-sentinel (process &key sentinel callback kill-buffer)
-         "Build a process sentinel for PROCESS.
+  "Build a process sentinel for PROCESS.
 
 The output process sentinel is the merge of:
  - :sentinel, if set
  - :callback, if set
  - `friendly-shell-command--kill-buffer-sentinel' if :kill-buffer is t"
-         (let (callback-sentinel kill-buffer-sentinel sentinel-list)
-           (when do-kill-buffer
-             (setq kill-buffer-sentinel #'friendly-shell-command--kill-buffer-sentinel))
-           (when callback
-             (setq callback-sentinel (lambda (_process _output)
-                                       (unless (process-live-p process)
-                                         (funcall callback)))))
-           (setq sentinel-list (-remove #'null
-                                        (list sentinel callback-sentinel kill-buffer-sentinel)))
-
-           (lambda (process line) (--each sentinel-list
-                               (funcall it process line)))))
+  (let (callback-sentinel kill-buffer-sentinel sentinel-list)
+    (when do-kill-buffer
+      (setq kill-buffer-sentinel #'friendly-shell-command--kill-buffer-sentinel))
+    (when callback
+      (setq callback-sentinel (lambda (_process _output)
+                                (unless (process-live-p process)
+                                  (funcall callback)))))
+    (setq sentinel-list (-remove #'null
+                                 (list sentinel callback-sentinel kill-buffer-sentinel)))
+    (lambda (process line)
+      (--each sentinel-list
+        (funcall it process line)))))
 
 
 
