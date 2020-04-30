@@ -47,7 +47,7 @@ And for `friendly-remote-shell`:
 
 ## Functions
 
-### Interractive Shells
+### Interactive Shells
 
 Command for spawning interactive shells or helper function to create new interactive shell-spawning commands.
 
@@ -63,7 +63,7 @@ Helpers functions to create commands launching (non-interactive) shell commands.
 * friendly-shell-command | [friendly-shell-command-async](#friendlyshell-command-async-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
 
 
-## Interractive Shells
+## Interactive Shells
 
 #### friendly-shell `(& path interpreter interpreter-args command-switch w32-arg-quote)`
 

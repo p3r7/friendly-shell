@@ -67,7 +67,7 @@ Usage:
 :callback           Function to run at the end of the command execution.
                     Should take no argument.
 :sentinel           Process sentinel function to associate to the command
-                    proccess.
+                    process.
                     Takes 2 arguments: process and output.
                     See `set-process-sentinel' for more information.
 

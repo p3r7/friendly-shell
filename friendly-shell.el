@@ -68,7 +68,7 @@
     :allow-local-vars allow-local-vars
     :form
     (let* (
-           ;; duplicated code from `with-shell-interpreter', but necessayr as not special vars and lexical binding is on
+           ;; duplicated code from `with-shell-interpreter', but necessary as not special vars and lexical binding is on
            (path (or path default-directory))
            (is-remote (file-remote-p path))
            (ignore-local-vars (not allow-local-vars))
@@ -128,7 +128,7 @@
 ;; PRIVATE UTILS: BUFFER NAME
 
 (defun friendly-shell--generate-buffer-name (is-remote interpreter path)
-  "Generate a buffer name accordint to INTERPRETER, PATH and whether IS-REMOTE or not."
+  "Generate a buffer name according to INTERPRETER, PATH and whether IS-REMOTE or not."
   (let ((fn (if is-remote
                 friendly-shell-buffer-remote-name-construction-fn
               friendly-shell-buffer-local-name-construction-fn)))
@@ -152,7 +152,7 @@
 
 
 
-;; PRIVATE UTILS: BUFFER DIPLAY BEHAVIOUR
+;; PRIVATE UTILS: BUFFER DISPLAY BEHAVIOUR
 
 (defun friendly-shell--maybe-register-buffer-display-same-win (basename)
   "If necessary, register buffer buffers containing BASENAME as spawning in the same window."
