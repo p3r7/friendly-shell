@@ -148,7 +148,7 @@ The output process sentinel is the merge of:
  - :callback, if set
  - `friendly-shell-command--kill-buffer-sentinel' if :kill-buffer is t"
   (let (callback-sentinel kill-buffer-sentinel sentinel-list)
-    (when do-kill-buffer
+    (when kill-buffer
       (setq kill-buffer-sentinel #'friendly-shell-command--kill-buffer-sentinel))
     (when callback
       (setq callback-sentinel (lambda (_process _output)
