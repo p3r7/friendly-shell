@@ -48,9 +48,9 @@ And for `friendly-remote-shell`:
 
 Packages `friendly-shell-command`, `friendly-shell` and `friendly-remote-shell` provide wrappers functions around standard Emacs shell API functions.
 
-Each of those functions have the same behavior as their wrapped counterparts but come with additional keyword arguments for controlling further their behavior.
+Each of those functions have the same behavior as their wrapped counterparts but come with additional keyword arguments.
 
-Here are the additionnal keywords that are shared by all the wrapper functions:
+Here are the additional keywords that are shared by all the wrapper functions:
 
 | keyword argument  | implicit var being let-bound                   | description                                                                       |
 |-------------------|------------------------------------------------|-----------------------------------------------------------------------------------|
@@ -73,17 +73,17 @@ Concreate examples can be found in [examples.md](examples.md).
 
 Helpers functions to create commands launching (non-interactive) shell commands.
 
-* friendly-shell-command | [friendly-shell-command-to-string](#friendlyshell-command-to-string-cmd--path-interpreter-command-switch) `(cmd & :path :interpreter :command-switch)`
-* friendly-shell-command | [friendly-shell-command](#friendlyshell-command-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
-* friendly-shell-command | [friendly-shell-command-async](#friendlyshell-command-async-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
+* friendly-shell-command | [friendly-shell-command-to-string](#friendly-shell-command-to-string-cmd--path-interpreter-command-switch) `(cmd & :path :interpreter :command-switch)`
+* friendly-shell-command | [friendly-shell-command](#friendly-shell-command-cmd--output-buffer-error-buffer-path-interpreter-interpreter-args-command-switch-callback-kill-buffer) `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
+* friendly-shell-command | [friendly-shell-command-async](#friendly-shell-command-async-cmd--output-buffer-error-buffer-path-interpreter-interpreter-args-command-switch-callback-kill-buffer-sentinel) `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
 
 
 ### Interactive Shells
 
 Command for spawning interactive shells or helper function to create new interactive shell-spawning commands.
 
-* friendly-shell | [friendly-shell](#friendlyshell--path-interpreter-interpreter-args-command-switch-w32-arg-quote) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
-* friendly-remote-shell | [friendly-remote-shell](#friendlyremoteshell--path-interpreter-interpreter-args-command-switch-w32-arg-quote) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
+* friendly-shell | [friendly-shell](#friendly-shell--path-interpreter-interpreter-args-command-switch-w32-arg-quote) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
+* friendly-remote-shell | [friendly-remote-shell](#friendly-remote-shell--path-interpreter-interpreter-args-command-switch-w32-arg-quote) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
 
 
 ## Shell Commands
