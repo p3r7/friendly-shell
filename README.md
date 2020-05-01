@@ -10,7 +10,7 @@ Examples can be found in [examples.md](examples.md).
 
 They rely heavily on package [with-shell-interpreter](https://github.com/p3r7/with-shell-interpreter).
 
-`friendly-remote-shell` relies additionally on helper packages from [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path).
+`friendly-remote-shell` relies additionally on helper package [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path).
 
 NB: These packages used to be called `prf-shell-command`, `prf-shell` and `prf-remote-shell`. You can still grab the legacy code with version [0.1.0](https://github.com/p3r7/friendly-shell/releases/tag/0.1.0).
 
@@ -44,8 +44,39 @@ And for `friendly-remote-shell`:
   :after (friendly-shell friendly-tramp-path))
 ```
 
+## General usage
 
-## Functions
+Packages `friendly-shell-command`, `friendly-shell` and `friendly-remote-shell` provide wrappers functions around standard Emacs shell API functions.
+
+Each of those functions have the same behavior as their wrapped counterparts but come with additional keyword arguments for controlling further their behavior.
+
+Here are the additionnal keywords that are shared by all the wrapper functions:
+
+| keyword argument  | implicit var being let-bound                   | description                                                                       |
+|-------------------|------------------------------------------------|-----------------------------------------------------------------------------------|
+| :path             | `default-directory`                            | The path from which to launch command / shell.                                    |
+| :interpreter      | `explicit-shell-file-name` / `shell-file-name` | Name or absolute path of shell interpreter executable.                            |
+| :interpreter-args | `explicit-INTEPRETER-args`                     | Login args to call interpreter with for login.                                    |
+| :command-switch   | `shell-command-switch`                         | Command switch arg for asking interpreter to run a shell command.                 |
+| :w32-arg-quote    | `w32-quote-process-args`                       | Character to use for quoting shell arguments (only on the Windows build of Emacs) |
+
+If :PATH is remote, the command will be executed with the remote host interpeter.
+
+See README of [with-shell-interpreter](https://github.com/p3r7/with-shell-interpreter) for more details.
+
+Concreate examples can be found in [examples.md](examples.md).
+
+
+## Functions index
+
+### Shell Commands
+
+Helpers functions to create commands launching (non-interactive) shell commands.
+
+* friendly-shell-command | [friendly-shell-command-to-string](#friendlyshell-command-to-string-cmd--path-interpreter-command-switch) `(cmd & :path :interpreter :command-switch)`
+* friendly-shell-command | [friendly-shell-command](#friendlyshell-command-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
+* friendly-shell-command | [friendly-shell-command-async](#friendlyshell-command-async-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
+
 
 ### Interactive Shells
 
@@ -55,43 +86,91 @@ Command for spawning interactive shells or helper function to create new interac
 * friendly-remote-shell | [friendly-remote-shell](#friendlyremoteshell--path-interpreter-interpreter-args-command-switch-w32-arg-quote) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
 
 
-### Shell Commands
+## Shell Commands
 
-Helpers functions to create commands launching (non-interactive) shell commands.
+Emacs provides some standard function for launching shell commands (from `simple.el`):
 
-* friendly-shell-command | [friendly-shell-command-to-string](#friendlyshell-command-to-string-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
-* friendly-shell-command | [friendly-shell-command-async](#friendlyshell-command-async-path-cmd--interpreter-interpreter-args-command-switch) `(path cmd & interpreter interpreter-args command-switch)`
+| function                                                       | execution    | return value                      | spawned buffers   |
+| --                                                             | :--:         | --                                | --                |
+| _shell-command-to-string_ `(command)`                          | synchronous  | stdout                            |                   |
+| _shell-command_ `(command & output-buffer error-buffer)`       | synchronous  | return code                       | stdout and stderr |
+| _async-shell-command_ `(command & output-buffer error-buffer)` | asynchronous | _window_ containing output-buffer | stdout and stderr |
+
+Package `friendly-shell-command` provide a wrapper around each of those.
+
+They have the same behavior (sync/async, return value, spawned buffers) as their wrapped counterparts.
+
+
+#### friendly-shell-command-to-string `(cmd & :path :interpreter :command-switch)`
+
+Calls CMD with `shell-command-to-string` with :INTERPRETER at given :PATH.
+
+
+#### friendly-shell-command `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
+
+Calls CMD synchronously with `shell-command` with :INTERPRETER at given :PATH.
+
+In addition to the [common keywords](#General-usage), the following additional keyword can be used:
+
+| keyword          | description                                          | default value             |
+|------------------|------------------------------------------------------|---------------------------|
+| `:output-buffer` | Buffer to output to.                                 | `*Shell Command Output*`  |
+| `:error-buffer`  | Buffer to output stderr to.                          | value of `:output-buffer` |
+| `:kill-buffer`   | If non-nil, will output buffer after execution       | `nil`                     |
+| `:callback`      | Function to run at the end of the command execution. | n/a                       |
+
+Please note that `:callback` function should not take any argument (0-arity).
+
+
+#### friendly-shell-command-async `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
+
+Calls CMD asynchronously with `async-shell-command` with :INTERPRETER at given :PATH.
+
+In addition to the [common keywords](#General-usage), the following additional keyword can be used:
+
+| keyword          | description                                          | default value             |
+|------------------|------------------------------------------------------|---------------------------|
+| `:output-buffer` | Buffer to output to.                                 | `*Shell Command Output*`  |
+| `:error-buffer`  | Buffer to output stderr to.                          | value of `:output-buffer` |
+| `:kill-buffer`   | If non-nil, will output buffer after execution       | `nil`                     |
+| `:callback`      | Function to run at the end of the command execution. | n/a                       |
+| `:sentinel`      | Process sentinel to bind to the command process.     | n/a                       |
+
+Please note that `:callback` function should not take any argument (0-arity).
+
+For the `:sentinel` argument, you can read more about process sentinels in [the Emacs manual](https://www.gnu.org/software/emacs/manual/html_node/elisp/Sentinels.html).
 
 
 ## Interactive Shells
 
-#### friendly-shell `(& path interpreter interpreter-args command-switch w32-arg-quote)`
+#### friendly-shell `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
 
-Command to spawn a shell at current location (`default-directory`).
+Spawn a shell with `shell` with :INTERPRETER at given :PATH.
 
-Can also be called as a function with provided arguments, even though we recommend using `friendly-tramp/shell-cl` for this purpose.
+When used as a command (i.e. called interactively), spawns a shell at current location (`default-directory`) with the default interpreter (`shell-file-name` or `with-shell-interpreter-default-remote` if on a remote server).
+
+Contrarily to default `shell` behavior, the value of interpreter and its args are kept as buffer-local vars (`explicit-shell-file-name`, `explicit-<interpreter>-args` ,`shell-command-switch`...).
+
+This allows reusing the same interpreter config when launching shell commands from the spawned buffer.
+
 
 #### friendly-remote-shell `(& path interpreter interpreter-args command-switch w32-arg-quote)`
 
-Same as `friendly-shell` but will prompt for path.
+Same as `friendly-shell` but accept a more permissive remote path format (thanks to [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path)).
 
-Will parse it expecting it to be a remote path.
+If called as a command, will prompt user for :PATH.
 
+For example:
 
-## Shell Commands
-
-#### friendly-shell-command-to-string `(path cmd & interpreter interpreter-args command-switch)`
-
-Calls CMD with `shell-command-to-string` at given PATH.
-
-PATH can be local or remote.
+    M-x friendly-shell
+    Host: pi@raspberry
 
 
-#### friendly-shell-command-async `(path cmd & interpreter interpreter-args command-switch)`
+## Complementary packages
 
-Calls CMD with `async-shell-command` at given PATH.
+I highly encourage to use package [shx](https://github.com/riscy/shx-for-emacs) which provides various enhancement for interactive shell buffers.
 
-PATH can be local or remote.
+One of the major improvement is the ability to resurrect dead shell buffers.
 
 
 ## Similar projects

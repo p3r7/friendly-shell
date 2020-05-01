@@ -33,10 +33,13 @@
 ;; (NON-INTERACTIVE) SHELL COMMANDS
 
 (cl-defun friendly-shell-command-to-string (command &key path interpreter command-switch)
-  "Call COMMAND w/ `shell-command-to-string' with :interpreter on host and
-location described by :path.
+  "Call COMMAND w/ `shell-command-to-string' with shell
+interpreter :interpreter and at location :path.  If :path is
+remote, the command will be executed with the remote host
+interpeter.
 
-For more details about all the keyword arguments, see `with-shell-interpreter'"
+For more details about all the keyword arguments, see
+`with-shell-interpreter'"
   (with-shell-interpreter
     :form (shell-command-to-string command)
     :path path
@@ -48,8 +51,9 @@ For more details about all the keyword arguments, see `with-shell-interpreter'"
                                                 callback
                                                 kill-buffer
                                                 sentinel)
-  "Call COMMAND w/ `async-shell-command' with :interpreter on host and
-location described by :path.
+  "Call COMMAND w/ `async-shell-command' with shell interpreter
+:interpreter and at location :path. If :path is remote, the
+command will be executed with the remote host interpeter.
 
 Usage:
 
@@ -98,8 +102,9 @@ For more details about the remaining keyword arguments, see `with-shell-interpre
 (cl-defun friendly-shell-command (command &key output-buffer error-buffer
                                           callback kill-buffer
                                           path interpreter command-switch)
-  "Call COMMAND w/ `shell-command' with :interpreter on host and location
-described by :path.
+  "Call COMMAND w/ `shell-command' with shell interpreter
+:interpreter and at location :path. If :path is remote, the
+command will be executed with the remote host interpeter.
 
 Usage:
 
