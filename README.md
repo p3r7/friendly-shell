@@ -4,9 +4,20 @@ Wrappers functions around standard Emacs shell API functions, with saner default
 
 They are split into 3 packages:
 
- - [![MELPA](https://melpa.org/packages/friendly-shell-command-badge.svg)](https://melpa.org/#/friendly-shell-command) `friendly-shell-command`: wraps shell command API from simple.el ([blog post](https://www.eigenbahn.com/2020/01/19/painless-emacs-shell-commands))
- - [![MELPA](https://melpa.org/packages/friendly-shell-badge.svg)](https://melpa.org/#/friendly-shell) `friendly-shell`: wraps interactive shell API from shell.el ([blog post](https://www.eigenbahn.com/2020/01/21/painless-emacs-interactive-shells))
- - [![MELPA](https://melpa.org/packages/friendly-remote-shell-badge.svg)](https://melpa.org/#/friendly-remote-shell) `friendly-remote-shell`: command for human-friendly spawning of remote shells
+ - `friendly-shell-command`: wraps shell command API from simple.el ([blog post](https://www.eigenbahn.com/2020/01/19/painless-emacs-shell-commands))
+
+   [![MELPA](https://melpa.org/packages/friendly-shell-command-badge.svg)](https://melpa.org/#/friendly-shell-command)
+   [![MELPA Stable](https://stable.melpa.org/packages/friendly-shell-command-badge.svg)](https://stable.melpa.org/#/friendly-shell-command)
+
+ - `friendly-shell`: wraps interactive shell API from shell.el ([blog post](https://www.eigenbahn.com/2020/01/21/painless-emacs-interactive-shells))
+
+   [![MELPA](https://melpa.org/packages/friendly-shell-badge.svg)](https://melpa.org/#/friendly-shell)
+   [![MELPA Stable](https://stable.melpa.org/packages/friendly-shell-badge.svg)](https://stable.melpa.org/#/friendly-shell)
+
+ - `friendly-remote-shell`: command for human-friendly spawning of remote shells
+
+   [![MELPA](https://melpa.org/packages/friendly-remote-shell-badge.svg)](https://melpa.org/#/friendly-remote-shell)
+   [![MELPA Stable](https://stable.melpa.org/packages/friendly-remote-shell-badge.svg)](https://stable.melpa.org/#/friendly-remote-shell)
 
 Examples can be found in [examples.md](examples.md).
 
