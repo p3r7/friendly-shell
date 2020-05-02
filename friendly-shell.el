@@ -10,9 +10,17 @@
 ;; SPDX-License-Identifier: MIT
 
 ;;; Commentary:
-;;  -----------
 ;;
-;; For detailed instructions, please look at the README.md
+;; Smarter and more user-friendly interactive shell.
+;;
+;; Provides `friendly-shell', a wrapper around `shell' with saner defaults
+;; and additional keyword arguments.
+;;
+;; Can be used as a function or command (i.e. called interactively).
+;;
+;; For detailed instructions, please look at the function documentation or
+;; the README.md at
+;; https://github.com/p3r7/friendly-shell/blob/master/README.md
 
 ;;; Code:
 
@@ -56,7 +64,17 @@
                                w32-arg-quote
                                allow-local-vars
                                buffer-name)
-  "Create a shell at given PATH, using given INTERPRETER binary."
+  "Create a shell with shell interpreter :interpreter and at
+location :path. If :path is remote, the command will be executed
+with the remote host interpreter.
+
+Usage:
+
+  (friendly-shell
+     [:keyword [option]]...
+     )
+
+For more details about the keyword arguments, see `with-shell-interpreter'"
   (interactive)
 
   (with-shell-interpreter
@@ -152,7 +170,7 @@
 
 
 
-;; PRIVATE UTILS: BUFFER DISPLAY BEHAVIOUR
+;; PRIVATE UTILS: BUFFER DISPLAY BEHAVIOR
 
 (defun friendly-shell--maybe-register-buffer-display-same-win (basename)
   "If necessary, register buffer buffers containing BASENAME as spawning in the same window."
