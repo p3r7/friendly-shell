@@ -4,9 +4,9 @@ Wrappers functions around standard Emacs shell API functions, with saner default
 
 They are split into 3 packages:
 
- - `friendly-shell-command` [![MELPA](https://melpa.org/packages/friendly-shell-command.svg)](https://melpa.org/#/friendly-shell-command): wraps shell command API from simple.el ([blog post](https://www.eigenbahn.com/2020/01/19/painless-emacs-shell-commands))
- - `friendly-shell` [![MELPA](https://melpa.org/packages/friendly-shell.svg)](https://melpa.org/#/friendly-shell): wraps interactive shell API from shell.el ([blog post](https://www.eigenbahn.com/2020/01/21/painless-emacs-interactive-shells))
- - `friendly-remote-shell` [![MELPA](https://melpa.org/packages/friendly-remote-shell.svg)](https://melpa.org/#/friendly-remote-shell): command for human-friendly spawning of remote shells
+ - [![MELPA](https://melpa.org/packages/friendly-shell-command.svg)](https://melpa.org/#/friendly-shell-command) `friendly-shell-command`: wraps shell command API from simple.el ([blog post](https://www.eigenbahn.com/2020/01/19/painless-emacs-shell-commands))
+ - [![MELPA](https://melpa.org/packages/friendly-shell.svg)](https://melpa.org/#/friendly-shell) `friendly-shell`: wraps interactive shell API from shell.el ([blog post](https://www.eigenbahn.com/2020/01/21/painless-emacs-interactive-shells))
+ - [![MELPA](https://melpa.org/packages/friendly-remote-shell.svg)](https://melpa.org/#/friendly-remote-shell) `friendly-remote-shell`: command for human-friendly spawning of remote shells
 
 Examples can be found in [examples.md](examples.md).
 
