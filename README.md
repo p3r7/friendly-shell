@@ -48,7 +48,7 @@ If _:path_ is remote, the command will be executed with the remote host interpet
 
 See README of [with-shell-interpreter](https://github.com/p3r7/with-shell-interpreter) for more details.
 
-Concreate examples can be found in [examples.md](examples.md).
+Concrete examples can be found in [examples.md](examples.md).
 
 
 ## Functions index
