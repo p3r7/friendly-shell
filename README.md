@@ -87,14 +87,14 @@ They have the same behavior (sync/async, return value, spawned buffers) as their
 
 #### friendly-shell-command-to-string
 
-Args: `(cmd & :path :interpreter :command-switch)`
+`(cmd & :path :interpreter :command-switch)`
 
 Calls CMD with `shell-command-to-string` with _:interpreter_ at given _:path_.
 
 
 #### friendly-shell-command
 
-Args: `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
+`(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
 
 Calls CMD synchronously with `shell-command` with _:interpreter_ at given _:path_.
 
@@ -112,7 +112,7 @@ Please note that `:callback` function should not take any argument (0-arity).
 
 #### friendly-shell-command-async
 
-Args: `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
+`(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
 
 Calls CMD asynchronously with `async-shell-command` with _:interpreter_ at given _:path_.
 
@@ -135,7 +135,7 @@ For the _:sentinel_ argument, you can read more about process sentinels in [the 
 
 #### friendly-shell
 
-Args: `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
+`(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
 
 Spawn a shell with `shell` with _:interpreter_ at given _:path_.
 
@@ -148,7 +148,7 @@ This allows reusing the same interpreter config when launching shell commands fr
 
 #### friendly-remote-shell
 
-Args: `(& path interpreter interpreter-args command-switch w32-arg-quote)`
+`(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
 
 Same as `friendly-shell` but accept a more permissive remote path format (thanks to [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path)).
 
