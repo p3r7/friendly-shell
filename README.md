@@ -52,15 +52,15 @@ Each of those functions have the same behavior as their wrapped counterparts but
 
 Here are the additional keywords that are shared by all the wrapper functions:
 
-| keyword argument  | implicit var being let-bound                   | description                                                                       |
-|-------------------|------------------------------------------------|-----------------------------------------------------------------------------------|
-| :path             | `default-directory`                            | The path from which to launch command / shell.                                    |
-| :interpreter      | `explicit-shell-file-name` / `shell-file-name` | Name or absolute path of shell interpreter executable.                            |
-| :interpreter-args | `explicit-INTEPRETER-args`                     | Login args to call interpreter with for login.                                    |
-| :command-switch   | `shell-command-switch`                         | Command switch arg for asking interpreter to run a shell command.                 |
-| :w32-arg-quote    | `w32-quote-process-args`                       | Character to use for quoting shell arguments (only on the Windows build of Emacs) |
+| keyword argument    | implicit var being let-bound                   | description                                                                       |
+|---------------------|------------------------------------------------|-----------------------------------------------------------------------------------|
+| _:path_             | `default-directory`                            | The path from which to launch command / shell.                                    |
+| _:interpreter_      | `explicit-shell-file-name` / `shell-file-name` | Name or absolute path of shell interpreter executable.                            |
+| _:interpreter-args_ | `explicit-INTEPRETER-args`                     | Login args to call interpreter with for login.                                    |
+| _:command-switch_   | `shell-command-switch`                         | Command switch arg for asking interpreter to run a shell command.                 |
+| _:w32-arg-quote_    | `w32-quote-process-args`                       | Character to use for quoting shell arguments (only on the Windows build of Emacs) |
 
-If :PATH is remote, the command will be executed with the remote host interpeter.
+If _:path_ is remote, the command will be executed with the remote host interpeter.
 
 See README of [with-shell-interpreter](https://github.com/p3r7/with-shell-interpreter) for more details.
 
@@ -103,49 +103,49 @@ They have the same behavior (sync/async, return value, spawned buffers) as their
 
 #### friendly-shell-command-to-string `(cmd & :path :interpreter :command-switch)`
 
-Calls CMD with `shell-command-to-string` with :INTERPRETER at given :PATH.
+Calls CMD with `shell-command-to-string` with _:interpreter_ at given _:path_.
 
 
 #### friendly-shell-command `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
 
-Calls CMD synchronously with `shell-command` with :INTERPRETER at given :PATH.
+Calls CMD synchronously with `shell-command` with _:interpreter_ at given _:path_.
 
 In addition to the [common keywords](#General-usage), the following additional keyword can be used:
 
 | keyword          | description                                          | default value             |
 |------------------|------------------------------------------------------|---------------------------|
-| `:output-buffer` | Buffer to output to.                                 | `*Shell Command Output*`  |
-| `:error-buffer`  | Buffer to output stderr to.                          | value of `:output-buffer` |
-| `:kill-buffer`   | If non-nil, will output buffer after execution       | `nil`                     |
-| `:callback`      | Function to run at the end of the command execution. | n/a                       |
+| _:output-buffer_ | Buffer to output to.                                 | `*Shell Command Output*`  |
+| _:error-buffer_  | Buffer to output stderr to.                          | value of `:output-buffer` |
+| _:kill-buffer_   | If non-nil, will output buffer after execution       | `nil`                     |
+| _:callback_      | Function to run at the end of the command execution. | n/a                       |
 
 Please note that `:callback` function should not take any argument (0-arity).
 
 
 #### friendly-shell-command-async `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
 
-Calls CMD asynchronously with `async-shell-command` with :INTERPRETER at given :PATH.
+Calls CMD asynchronously with `async-shell-command` with _:interpreter_ at given _:path_.
 
 In addition to the [common keywords](#General-usage), the following additional keyword can be used:
 
 | keyword          | description                                          | default value             |
 |------------------|------------------------------------------------------|---------------------------|
-| `:output-buffer` | Buffer to output to.                                 | `*Shell Command Output*`  |
-| `:error-buffer`  | Buffer to output stderr to.                          | value of `:output-buffer` |
-| `:kill-buffer`   | If non-nil, will output buffer after execution       | `nil`                     |
-| `:callback`      | Function to run at the end of the command execution. | n/a                       |
-| `:sentinel`      | Process sentinel to bind to the command process.     | n/a                       |
+| _:output-buffer_ | Buffer to output to.                                 | `*Shell Command Output*`  |
+| _:error-buffer_  | Buffer to output stderr to.                          | value of `:output-buffer` |
+| _:kill-buffer_   | If non-nil, will output buffer after execution       | `nil`                     |
+| _:callback_      | Function to run at the end of the command execution. | n/a                       |
+| _:sentinel_      | Process sentinel to bind to the command process.     | n/a                       |
 
-Please note that `:callback` function should not take any argument (0-arity).
+Please note that _:callback_ function should not take any argument (0-arity).
 
-For the `:sentinel` argument, you can read more about process sentinels in [the Emacs manual](https://www.gnu.org/software/emacs/manual/html_node/elisp/Sentinels.html).
+For the _:sentinel_ argument, you can read more about process sentinels in [the Emacs manual](https://www.gnu.org/software/emacs/manual/html_node/elisp/Sentinels.html).
 
 
 ## Interactive Shells
 
 #### friendly-shell `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
 
-Spawn a shell with `shell` with :INTERPRETER at given :PATH.
+Spawn a shell with `shell` with _:interpreter_ at given _:path_.
 
 When used as a command (i.e. called interactively), spawns a shell at current location (`default-directory`) with the default interpreter (`shell-file-name` or `with-shell-interpreter-default-remote` if on a remote server).
 
@@ -158,7 +158,7 @@ This allows reusing the same interpreter config when launching shell commands fr
 
 Same as `friendly-shell` but accept a more permissive remote path format (thanks to [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path)).
 
-If called as a command, will prompt user for :PATH.
+If called as a command, will prompt user for _:path_, assuming it's a remote host.
 
 For example:
 
