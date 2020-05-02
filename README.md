@@ -1,54 +1,38 @@
 # friendly-shell
 
-This repository holds several packages:
+Wrappers functions around standard Emacs shell API functions, with saner defaults and additional keyword arguments.
 
- - `friendly-shell-command`: Better shell-command API ([blog post](https://www.eigenbahn.com/2020/01/19/painless-emacs-shell-commands))
- - `friendly-shell`: Better interactive shell API ([blog post](https://www.eigenbahn.com/2020/01/21/painless-emacs-interactive-shells))
- - `friendly-remote-shell`: Human-friendly spawning of remote shells
+They are split into 3 packages:
+
+ - `friendly-shell-command` [![MELPA](https://melpa.org/packages/friendly-shell-command.svg)](https://melpa.org/#/friendly-shell-command): wraps shell command API from simple.el ([blog post](https://www.eigenbahn.com/2020/01/19/painless-emacs-shell-commands))
+ - `friendly-shell` [![MELPA](https://melpa.org/packages/friendly-shell.svg)](https://melpa.org/#/friendly-shell): wraps interactive shell API from shell.el ([blog post](https://www.eigenbahn.com/2020/01/21/painless-emacs-interactive-shells))
+ - `friendly-remote-shell` [![MELPA](https://melpa.org/packages/friendly-remote-shell.svg)](https://melpa.org/#/friendly-remote-shell): command for human-friendly spawning of remote shells
 
 Examples can be found in [examples.md](examples.md).
 
 They rely heavily on package [with-shell-interpreter](https://github.com/p3r7/with-shell-interpreter).
 
-`friendly-remote-shell` relies additionally on helper package [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path).
+`friendly-remote-shell` relies additionally on helper package [friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path).
 
 NB: These packages used to be called `prf-shell-command`, `prf-shell` and `prf-remote-shell`. You can still grab the legacy code with version [0.1.0](https://github.com/p3r7/friendly-shell/releases/tag/0.1.0).
 
 
 ## Installation
 
-Not yet on [Melpa](https://melpa.org/).
-
-For now, the recommended way to install is with [use-package](https://github.com/jwiegley/use-package), [quelpa](https://github.com/quelpa/quelpa) and [quelpa-use-package](https://github.com/quelpa/quelpa-use-package).
+All the packages are available on [Melpa](https://melpa.org/).
 
 ```el
-(use-package with-shell-interpreter)
+(use-package friendly-shell-command)
 
-(use-package friendly-shell-command
-  :quelpa (friendly-shell-command :fetcher github :repo "p3r7/friendly-shell")
-  :after (tramp with-shell-interpreter))
+(use-package friendly-shell)
 
-(use-package friendly-shell
-  :quelpa (friendly-shell :fetcher github :repo "p3r7/friendly-shell")
-  :after (tramp with-shell-interpreter))
+(use-package friendly-remote-shell)
 ```
 
-And for `friendly-remote-shell`:
-
-```el
-(use-package friendly-tramp-path
-  :after tramp))
-
-(use-package friendly-remote-shell
-  :quelpa (friendly-remote-shell :fetcher github :repo "p3r7/friendly-shell")
-  :after (friendly-shell friendly-tramp-path))
-```
 
 ## General usage
 
-Packages `friendly-shell-command`, `friendly-shell` and `friendly-remote-shell` provide wrappers functions around standard Emacs shell API functions.
-
-Each of those functions have the same behavior as their wrapped counterparts but come with additional keyword arguments.
+Each of functions provided by the package have the same behavior as their wrapped counterparts but come with additional keyword arguments.
 
 Here are the additional keywords that are shared by all the wrapper functions:
 
@@ -73,17 +57,17 @@ Concreate examples can be found in [examples.md](examples.md).
 
 Helpers functions to create commands launching (non-interactive) shell commands.
 
-* friendly-shell-command | [friendly-shell-command-to-string](#friendly-shell-command-to-string-cmd--path-interpreter-command-switch) `(cmd & :path :interpreter :command-switch)`
-* friendly-shell-command | [friendly-shell-command](#friendly-shell-command-cmd--output-buffer-error-buffer-path-interpreter-interpreter-args-command-switch-callback-kill-buffer) `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
-* friendly-shell-command | [friendly-shell-command-async](#friendly-shell-command-async-cmd--output-buffer-error-buffer-path-interpreter-interpreter-args-command-switch-callback-kill-buffer-sentinel) `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
+* friendly-shell-command | [friendly-shell-command-to-string](#friendly-shell-command-to-string) `(cmd & :path :interpreter :command-switch)`
+* friendly-shell-command | [friendly-shell-command](#friendly-shell-command) `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
+* friendly-shell-command | [friendly-shell-command-async](#friendly-shell-command-async) `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
 
 
 ### Interactive Shells
 
 Command for spawning interactive shells or helper function to create new interactive shell-spawning commands.
 
-* friendly-shell | [friendly-shell](#friendly-shell--path-interpreter-interpreter-args-command-switch-w32-arg-quote) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
-* friendly-remote-shell | [friendly-remote-shell](#friendly-remote-shell--path-interpreter-interpreter-args-command-switch-w32-arg-quote) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
+* friendly-shell | [friendly-shell](#friendly-shell) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
+* friendly-remote-shell | [friendly-remote-shell](#friendly-remote-shell) `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
 
 
 ## Shell Commands
@@ -101,12 +85,16 @@ Package `friendly-shell-command` provide a wrapper around each of those.
 They have the same behavior (sync/async, return value, spawned buffers) as their wrapped counterparts.
 
 
-#### friendly-shell-command-to-string `(cmd & :path :interpreter :command-switch)`
+#### friendly-shell-command-to-string
+
+Args: `(cmd & :path :interpreter :command-switch)`
 
 Calls CMD with `shell-command-to-string` with _:interpreter_ at given _:path_.
 
 
-#### friendly-shell-command `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
+#### friendly-shell-command
+
+Args: `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer)`
 
 Calls CMD synchronously with `shell-command` with _:interpreter_ at given _:path_.
 
@@ -122,7 +110,9 @@ In addition to the [common keywords](#General-usage), the following additional k
 Please note that `:callback` function should not take any argument (0-arity).
 
 
-#### friendly-shell-command-async `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
+#### friendly-shell-command-async
+
+Args: `(cmd & :output-buffer :error-buffer :path :interpreter :interpreter-args :command-switch :callback :kill-buffer :sentinel)`
 
 Calls CMD asynchronously with `async-shell-command` with _:interpreter_ at given _:path_.
 
@@ -143,7 +133,9 @@ For the _:sentinel_ argument, you can read more about process sentinels in [the 
 
 ## Interactive Shells
 
-#### friendly-shell `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
+#### friendly-shell
+
+Args: `(& :path :interpreter :interpreter-args :command-switch :w32-arg-quote)`
 
 Spawn a shell with `shell` with _:interpreter_ at given _:path_.
 
@@ -154,7 +146,9 @@ Contrarily to default `shell` behavior, the value of interpreter and its args ar
 This allows reusing the same interpreter config when launching shell commands from the spawned buffer.
 
 
-#### friendly-remote-shell `(& path interpreter interpreter-args command-switch w32-arg-quote)`
+#### friendly-remote-shell
+
+Args: `(& path interpreter interpreter-args command-switch w32-arg-quote)`
 
 Same as `friendly-shell` but accept a more permissive remote path format (thanks to [p3r7/friendly-tramp-path](https://github.com/p3r7/friendly-tramp-path)).
 
