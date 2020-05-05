@@ -92,12 +92,12 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
            (allow-local-vars (or allow-local-vars 'connection))
            (allow-buffer-local-vars  (member allow-local-vars '(buffer both)))
            (allow-cnnx-local-vars (member allow-local-vars '(connection both)))
-           (cnnx-local-vars (with-shell-interpreter--get-cnnx-local-vars path))
-           (interpreter (with-shell-interpreter--get-interpreter-value is-remote
-                                                                       allow-buffer-local-vars
-                                                                       allow-cnnx-local-vars cnnx-local-vars
-                                                                       interpreter))
-           (interpreter-name (with-shell-interpreter--get-interpreter-name interpreter))
+           (cnnx-local-vars (with-shell-interpreter--cnnx-local-vars path))
+           (interpreter (with-shell-interpreter--interpreter-value is-remote
+                                                                   allow-buffer-local-vars
+                                                                   allow-cnnx-local-vars cnnx-local-vars
+                                                                   interpreter))
+           (interpreter-name (with-shell-interpreter--interpreter-name interpreter))
            (explicit-interpreter-args-var (intern (concat "explicit-" interpreter-name "-args")))
            ;; shell buffer name
            (shell-buffer-basename (or buffer-name
@@ -161,7 +161,7 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
 (defun friendly-shell--generate-buffer-name-local (&optional interpreter _path)
   "Generate a buffer name for local shell, according to INTERPRETER."
   (if interpreter
-      (with-shell-interpreter--get-interpreter-name interpreter)
+      (with-shell-interpreter--interpreter-name interpreter)
     friendly-shell-default-buffer-name))
 
 (defun friendly-shell--generate-buffer-name-remote (&optional _interpreter path)
