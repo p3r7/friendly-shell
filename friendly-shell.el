@@ -5,7 +5,7 @@
 ;; Version: 0.1.0
 ;; Keywords: processes, terminals
 ;; URL: https://github.com/p3r7/friendly-shell
-;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.1.0"))
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.2.1"))
 ;;
 ;; SPDX-License-Identifier: MIT
 
@@ -89,8 +89,14 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
            ;; duplicated code from `with-shell-interpreter', but necessary as not special vars and lexical binding is on
            (path (or path default-directory))
            (is-remote (file-remote-p path))
-           (ignore-local-vars (not allow-local-vars))
-           (interpreter (with-shell-interpreter--get-interpreter-value is-remote ignore-local-vars interpreter))
+           (allow-local-vars (or allow-local-vars 'connection))
+           (allow-buffer-local-vars  (member allow-local-vars '(buffer both)))
+           (allow-cnnx-local-vars (member allow-local-vars '(connection both)))
+           (cnnx-local-vars (with-shell-interpreter--get-cnnx-local-vars path))
+           (interpreter (with-shell-interpreter--get-interpreter-value is-remote
+                                                                       allow-buffer-local-vars
+                                                                       allow-cnnx-local-vars cnnx-local-vars
+                                                                       interpreter))
            (interpreter-name (with-shell-interpreter--get-interpreter-name interpreter))
            (explicit-interpreter-args-var (intern (concat "explicit-" interpreter-name "-args")))
            ;; shell buffer name
