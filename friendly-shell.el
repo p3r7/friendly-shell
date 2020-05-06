@@ -106,13 +106,13 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
            (shell-buffer (get-buffer-create shell-buffer-name))
            ;; special vars
            (current-prefix-arg '(4))
-           (comint-process-echoes t)
            ;; copies of special vars set by with-shell-interpreter
            (og-explicit-shell-file-name explicit-shell-file-name)
            (og-shell-file-name shell-file-name)
            (og-explicit-interpreter-args (symbol-value explicit-interpreter-args-var))
            (og-shell-command-switch shell-command-switch)
-           (og-w32-quote-process-args w32-quote-process-args))
+           (og-w32-quote-process-args w32-quote-process-args)
+           (og-comint-process-echoes (friendly-shell--stty-echo-p og-explicit-interpreter-args)))
 
       (when friendly-shell-spawn-in-same-win
         (friendly-shell--maybe-register-buffer-display-same-win shell-buffer-basename))
@@ -127,7 +127,7 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
         (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
         (when (boundp 'w32-quote-process-args)
           (set (make-local-variable 'shell-command-switch) og-w32-quote-process-args))
-        (set (make-local-variable 'comint-process-echoes) t))
+        (set (make-local-variable 'comint-process-echoes) og-comint-process-echoes))
 
       (shell shell-buffer)
 
@@ -139,11 +139,7 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
         (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
         (when (boundp 'w32-quote-process-args)
           (set (make-local-variable 'shell-command-switch) og-w32-quote-process-args))
-
-        ;; assumes echoes input (e.g. 'stty echo' for dash), for TRAMP to do proper dirtrack
-        ;; we hide this echoed line to the end user
-        ;; REVIEW: should use a keyword to activate is conditionally
-        (setq comint-process-echoes t))
+        (set (make-local-variable 'comint-process-echoes) og-comint-process-echoes))
 
       shell-buffer)))
 
@@ -173,6 +169,18 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
   "Generate a buffer name for remote shell, from VEC (split tramp path)."
   (concat
    (tramp-file-name-user vec) "@" (tramp-file-name-host vec)))
+
+
+
+;; PRIVATE UTILS: STTY ECHO?
+
+(defun friendly-shell--stty-echo-p (explicit-interpreter-args)
+  "Return t when \"stty echo\" is set through EXPLICIT-INTERPRETER-ARGS."
+  ;; NB: we do not handle a edge-case scenario where would first "stty echo" and then "stty -echo"
+  (not (-all? #'null
+              (--map
+               (string-match-p (regexp-quote "stty echo") it)
+               explicit-interpreter-args))))
 
 
 
