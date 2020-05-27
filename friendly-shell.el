@@ -5,7 +5,7 @@
 ;; Version: 0.2.2
 ;; Keywords: processes, terminals
 ;; URL: https://github.com/p3r7/friendly-shell
-;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.2.2"))
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.2.3"))
 ;;
 ;; SPDX-License-Identifier: MIT
 
