@@ -2,10 +2,10 @@
 
 ;; Copyright (C) 2019-2020 Jordan Besly
 ;;
-;; Version: 0.2.2
+;; Version: 0.2.4
 ;; Keywords: processes, terminals
 ;; URL: https://github.com/p3r7/friendly-shell
-;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.2.3"))
+;; Package-Requires: ((emacs "24.1")(cl-lib "0.6.1")(with-shell-interpreter "0.2.4"))
 ;;
 ;; SPDX-License-Identifier: MIT
 
@@ -85,63 +85,59 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
     :w32-arg-quote w32-arg-quote
     :allow-local-vars allow-local-vars
     :form
-    (let* (
-           ;; duplicated code from `with-shell-interpreter', but necessary as not special vars and lexical binding is on
-           (path (or path default-directory))
-           (is-remote (file-remote-p path))
-           (allow-local-vars (or allow-local-vars 'connection))
-           (allow-buffer-local-vars  (member allow-local-vars '(buffer both)))
-           (allow-cnnx-local-vars (member allow-local-vars '(connection both)))
-           (cnnx-local-vars (with-shell-interpreter--cnnx-local-vars path))
-           (interpreter (with-shell-interpreter--interpreter-value is-remote
-                                                                   allow-buffer-local-vars
-                                                                   allow-cnnx-local-vars cnnx-local-vars
-                                                                   interpreter))
-           (interpreter-name (with-shell-interpreter--interpreter-name interpreter))
-           (explicit-interpreter-args-var (intern (concat "explicit-" interpreter-name "-args")))
-           ;; shell buffer name
-           (shell-buffer-basename (or buffer-name
-                                      (friendly-shell--generate-buffer-name is-remote interpreter default-directory)))
-           (shell-buffer-name (generate-new-buffer-name (concat "*" shell-buffer-basename "*")))
-           (shell-buffer (get-buffer-create shell-buffer-name))
-           ;; special vars
-           (current-prefix-arg '(4))
-           ;; copies of special vars set by with-shell-interpreter
-           (og-explicit-shell-file-name explicit-shell-file-name)
-           (og-shell-file-name shell-file-name)
-           (og-explicit-interpreter-args (symbol-value explicit-interpreter-args-var))
-           (og-shell-command-switch shell-command-switch)
-           (og-w32-quote-process-args w32-quote-process-args)
-           (og-comint-process-echoes (friendly-shell--stty-echo-p og-explicit-interpreter-args)))
 
-      (when friendly-shell-spawn-in-same-win
-        (friendly-shell--maybe-register-buffer-display-same-win shell-buffer-basename))
+    ;; NB: duplicated code from `with-shell-interpreter', but necessary as not special vars and lexical binding is on
+    (cl-destructuring-bind (path
+                            is-remote
+                            allow-buffer-local-vars
+                            allow-cnnx-local-vars cnnx-local-vars
+                            interpreter interpreter-name
+                            explicit-interpreter-args-var)
+        (with-shell-interpreter--generate-props path interpreter allow-local-vars)
+      (let* (
+             ;; shell buffer name
+             (shell-buffer-basename (or buffer-name
+                                        (friendly-shell--generate-buffer-name is-remote interpreter default-directory)))
+             (shell-buffer-name (generate-new-buffer-name (concat "*" shell-buffer-basename "*")))
+             (shell-buffer (get-buffer-create shell-buffer-name))
+             ;; special vars
+             (current-prefix-arg '(4))
+             ;; copies of special vars set by with-shell-interpreter
+             (og-explicit-shell-file-name explicit-shell-file-name)
+             (og-shell-file-name shell-file-name)
+             (og-explicit-interpreter-args (symbol-value explicit-interpreter-args-var))
+             (og-shell-command-switch shell-command-switch)
+             (og-w32-quote-process-args w32-quote-process-args)
+             (og-comint-process-echoes (friendly-shell--stty-echo-p og-explicit-interpreter-args)))
 
-      (with-current-buffer shell-buffer
-        ;; NB: when making those var buffer-local, we seem to be forced to bind them to the buffer beforehand
-        ;; otherwise, starting from 2nd launched shell, lexical binding will be ignored
-        (set (make-local-variable 'explicit-shell-file-name) og-explicit-shell-file-name)
-        (set (make-local-variable 'shell-file-name) og-shell-file-name)
-        (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
-        ;; NB: necessary when launching `shell-command' and friends from the interactive shell buffer
-        (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
-        (when (boundp 'w32-quote-process-args)
-          (set (make-local-variable 'shell-command-switch) og-w32-quote-process-args))
-        (set (make-local-variable 'comint-process-echoes) og-comint-process-echoes))
+        (when friendly-shell-spawn-in-same-win
+          (friendly-shell--maybe-register-buffer-display-same-win shell-buffer-basename))
 
-      (shell shell-buffer)
+        (with-current-buffer shell-buffer
+          ;; NB: when making those var buffer-local, we seem to be forced to bind them to the buffer beforehand
+          ;; otherwise, starting from 2nd launched shell, lexical binding will be ignored
+          (set (make-local-variable 'explicit-shell-file-name) og-explicit-shell-file-name)
+          (set (make-local-variable 'shell-file-name) og-shell-file-name)
+          (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
+          ;; NB: necessary when launching `shell-command' and friends from the interactive shell buffer
+          (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
+          (when (boundp 'w32-quote-process-args)
+            (set (make-local-variable 'shell-command-switch) og-w32-quote-process-args))
+          (set (make-local-variable 'comint-process-echoes) og-comint-process-echoes))
 
-      (with-current-buffer shell-buffer
-        ;; NB: comint / shell undoes some of our bindings, so we need to set them back
-        (set (make-local-variable 'explicit-shell-file-name) og-explicit-shell-file-name)
-        (set (make-local-variable 'shell-file-name) og-shell-file-name)
-        (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
-        (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
-        (when (boundp 'w32-quote-process-args)
-          (set (make-local-variable 'shell-command-switch) og-w32-quote-process-args))
-        (set (make-local-variable 'comint-process-echoes) og-comint-process-echoes))
+        (shell shell-buffer)
 
-      shell-buffer)))
+        (with-current-buffer shell-buffer
+          ;; NB: comint / shell undoes some of our bindings, so we need to set them back
+          (set (make-local-variable 'explicit-shell-file-name) og-explicit-shell-file-name)
+          (set (make-local-variable 'shell-file-name) og-shell-file-name)
+          (set (make-local-variable explicit-interpreter-args-var) og-explicit-interpreter-args)
+          (set (make-local-variable 'shell-command-switch) og-shell-command-switch)
+          (when (boundp 'w32-quote-process-args)
+            (set (make-local-variable 'shell-command-switch) og-w32-quote-process-args))
+          (set (make-local-variable 'comint-process-echoes) og-comint-process-echoes))
+
+        shell-buffer))))
 
 
 
