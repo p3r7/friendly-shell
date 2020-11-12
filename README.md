@@ -201,3 +201,10 @@ It also provides command `better-shell-remote-open` which behaves like `friendly
 #### [randymorris/tramp-term](https://github.com/randymorris/tramp-term.el)
 
 Bindings between term.el and TRAMP to ease the creation of remote term buffers.
+
+
+## Legibility
+
+This code uses form feeds (`^L` character) as separators.
+
+Either package [form-feed](https://github.com/wasamasa/form-feed) or [page-break-lines](https://github.com/purcell/page-break-lines) makes them appear as intended.
