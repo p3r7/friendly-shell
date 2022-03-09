@@ -162,10 +162,24 @@ For more details about the keyword arguments, see `with-shell-interpreter'"
   (let ((vec (tramp-dissect-file-name path)))
     (friendly-shell--generate-buffer-name-remote-from-vec vec)))
 
+(defun friendly-shell--tramp-hop-paths-from-vec (vec)
+  "Compute multi-hop paths from VEC."
+  (--map
+   (substring-no-properties (tramp-make-tramp-file-name it))
+   (tramp-compute-multi-hops vec)))
+
+(defun friendly-shell--tramp-hop-paths (path)
+  "Split PATH into multiple multi-hop sub-paths."
+  (friendly-shell--tramp-hop-paths-from-vec (tramp-dissect-file-name path)))
+
 (defun friendly-shell--generate-buffer-name-remote-from-vec (vec)
   "Generate a buffer name for remote shell, from VEC (split tramp path)."
-  (concat
-   (tramp-file-name-user vec) "@" (tramp-file-name-host vec)))
+  (let* ((mh-paths (nreverse (friendly-shell--tramp-hop-paths-from-vec vec)))
+         (user (or (--some (tramp-file-name-user (tramp-dissect-file-name it)) mh-paths)
+                   ;; TODO: also take into account newish `tramp-default-user-alist'
+                   tramp-default-user)))
+    (concat
+     user "@" (tramp-file-name-host vec))))
 
 
 
